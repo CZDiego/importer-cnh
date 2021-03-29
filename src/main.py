@@ -1,21 +1,19 @@
-#Run like:
-#python3 excel.py
+# Run like:
+# python3 excel.py
 
 import pandas
 
+# TODO: Read excel file from local volume instead of having it in docker container
+EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
 
-#EXCEL_PATH = r'/Users/diegocontreras/Documents/export-content-20210302121846 - excel - with GDP fields v2.xlsx'
+def read_excel(path):
+    excel_data = pandas.read_excel(path)
 
-#def readExcel(path):
-
-#	excelData = pandas.read_excel (path)
-
-#	for index, row in excelData.iterrows():
-
-#		print(row)
+    for index, row in excel_data.iterrows():
+        print(row)
 
 
-#readExcel(EXCEL_PATH)
+read_excel(EXCEL_PATH)
 
-print ("Hello world")
+print("Hello world")
