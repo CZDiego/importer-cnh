@@ -10,25 +10,25 @@ EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
 
 def parse_pieces_of_content(path):
-
     result = []
     excel_data = pandas.read_excel(path)
 
     for index, row in excel_data.iterrows():
-        for piece_of_content in PIECES_OF_CONTENT:
+        for piece_of_content_mapping in PIECES_OF_CONTENT_MAPPING:
 
-            if pandas.isnull(row[piece_of_content.columns["master_id"]]):
+            if pandas.isnull(row[piece_of_content_mapping.columns["master_id"]]):
                 continue
 
             ans = dict()
-            for column_name, column_mapping in piece_of_content.columns.items():
+            for column_name, column_mapping in piece_of_content_mapping.columns.items():
                 ans[column_name] = None if pandas.isnull(row[column_mapping]) else row[column_mapping]
-            ans[AUTH_TEMPLATE] = piece_of_content.auth_template
+            ans[AUTH_TEMPLATE] = piece_of_content_mapping.auth_template
             result.append(ans)
 
     return result
 
 
+# Main
 pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 
 json_data = json.dumps(pieces_of_content)

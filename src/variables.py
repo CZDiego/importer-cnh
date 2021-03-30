@@ -16,11 +16,13 @@ class PoCMapping:
         return DataMapping(columns, self.auth_template)
 
 
-PIECES_OF_CONTENT = []
+PIECES_OF_CONTENT_MAPPING = []
 AUTH_TEMPLATE = "auth-template"
 
-PIECES_OF_CONTENT.append(PoCMapping("post", "Post 1 master id", "Post 1 Title", "Post 1 Description").toDataMapping())
-PIECES_OF_CONTENT.append(PoCMapping("post", "Post 2 master id", "Post 2 Title", "Post 2 Description").toDataMapping())
-PIECES_OF_CONTENT.append(PoCMapping("post", "Post 3 master id", "Post 3 Title", "Post 3 Description").toDataMapping())
-PIECES_OF_CONTENT.append(PoCMapping("post", "Post 4 master id", "Post 4 Title", "Post 4 Description").toDataMapping())
-PIECES_OF_CONTENT.append(PoCMapping("post", "Post 5 master id", "Post 5 Title", "Post 5 Description").toDataMapping())
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("post", "Post 1 master id", "Post 1 Title", "Post 1 Description").toDataMapping())
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("post", "Post 2 master id", "Post 2 Title", "Post 2 Description").toDataMapping())
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("post", "Post 3 master id", "Post 3 Title", "Post 3 Description").toDataMapping())
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("post", "Post 4 master id", "Post 4 Title", "Post 4 Description").toDataMapping())
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("post", "Post 5 master id", "Post 5 Title", "Post 5 Description").toDataMapping())
+
+PIECES_OF_CONTENT_MAPPING.append(PoCMapping("page", "master_id", "Page title", "Page Short Description").toDataMapping())
