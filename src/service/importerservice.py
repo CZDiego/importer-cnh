@@ -1,15 +1,12 @@
 from .httpclient import *
+from variables import IMPORTER_SERVICE_VARIABLES
 
 class ImporterService:
-    BASE_URL = "https://swapi.dev/"
-    PEOPLE_URL = BASE_URL + "api/people/{id}"
+    BASE_URL = IMPORTER_SERVICE_VARIABLES.get("BaseURL")
+    IMPORT_CONTENT_URL = BASE_URL + IMPORTER_SERVICE_VARIABLES.get("ImporterURL")
 
-    def getItem(id):
-        id = str(id)
-        service_url = ImporterService.PEOPLE_URL.format(id=id)
-        return HttpClient.get(service_url)
-
-    def saveItem(self):
-        return HttpClient.get(BASE_URL)
+    def saveItem(data):
+        print(ImporterService.IMPORT_CONTENT_URL)
+        return HttpClient.post(ImporterService.IMPORT_CONTENT_URL, data)
 
 

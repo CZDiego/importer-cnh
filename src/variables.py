@@ -1,3 +1,10 @@
+import configparser
+
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+IMPORTER_SERVICE_VARIABLES = config["IMPORTER_SERVICE_VARIABLES"]
+
 class DataMapping:
     def __init__(self, columns, auth_template):
         self.columns = columns
