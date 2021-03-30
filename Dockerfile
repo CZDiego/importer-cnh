@@ -4,6 +4,7 @@ RUN pip install pandas
 RUN pip install xlrd==1.2.0
 
 ADD data/export-content-20210302121846.xlsx /
+ADD src/variables.py /
 ADD src/main.py /
 
 CMD [ "python", "./main.py" ]
