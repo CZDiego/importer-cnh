@@ -3,25 +3,24 @@ class DataMapping:
         self.columns = columns
         self.auth_template = auth_template
 
+
+class PoCMapping:
+    def __init__(self, auth_template, master_id, name, description):
+        self.auth_template = auth_template
+        self.master_id = master_id
+        self.name = name
+        self.description = description
+
+    def toDataMapping(self):
+        columns = dict(master_id=self.master_id, name=self.name, description=self.description)
+        return DataMapping(columns, self.auth_template)
+
+
 PIECES_OF_CONTENT = []
 AUTH_TEMPLATE = "auth-template"
 
-post1_columns = dict(master_id="Post 1 master id", name="Post 1 Title", description="Post 1 Description")
-post1_mapping = DataMapping(post1_columns, "post")
-PIECES_OF_CONTENT.append(post1_mapping)
-
-post2_columns = dict(master_id="Post 2 master id", name="Post 2 Title", description="Post 2 Description")
-post2_mapping = DataMapping(post2_columns, "post")
-PIECES_OF_CONTENT.append(post2_mapping)
-
-post3_columns = dict(master_id="Post 3 master id", name="Post 3 Title", description="Post 3 Description")
-post3_mapping = DataMapping(post3_columns, "post")
-PIECES_OF_CONTENT.append(post3_mapping)
-
-post4_columns = dict(master_id="Post 4 master id", name="Post 4 Title", description="Post 4 Description")
-post4_mapping = DataMapping(post4_columns, "post")
-PIECES_OF_CONTENT.append(post4_mapping)
-
-post5_columns = dict(master_id="Post 5 master id", name="Post 5 Title", description="Post 5 Description")
-post5_mapping = DataMapping(post5_columns, "post")
-PIECES_OF_CONTENT.append(post5_mapping)
+PIECES_OF_CONTENT.append(PoCMapping("post", "Post 1 master id", "Post 1 Title", "Post 1 Description").toDataMapping())
+PIECES_OF_CONTENT.append(PoCMapping("post", "Post 2 master id", "Post 2 Title", "Post 2 Description").toDataMapping())
+PIECES_OF_CONTENT.append(PoCMapping("post", "Post 3 master id", "Post 3 Title", "Post 3 Description").toDataMapping())
+PIECES_OF_CONTENT.append(PoCMapping("post", "Post 4 master id", "Post 4 Title", "Post 4 Description").toDataMapping())
+PIECES_OF_CONTENT.append(PoCMapping("post", "Post 5 master id", "Post 5 Title", "Post 5 Description").toDataMapping())
