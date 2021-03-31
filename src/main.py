@@ -4,6 +4,7 @@
 import pandas
 import json
 from variables import *
+import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
 
 # TODO: Read excel file from local volume instead of having it in docker container
@@ -34,7 +35,15 @@ pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 
 json_data = json.dumps(pieces_of_content)
 
-piece_of_content = dict(name="test-from-docker-3", title="Test From Docker3", authoringTemplateName="CNH_File",
-                        contentLibraryName="Web Content", path="test")
+TemplateNames = html_markup_generator.TemplateNames
+CollapsibleElement = html_markup_generator.CollapsibleElement
+collapsible_elements = [CollapsibleElement("My first title", ["1:firstParagraph", "1:secondParagraph"]),
+                        CollapsibleElement("My second title", ["2:firstParagraph", "2:secondParagraph"])]
+page = html_markup_generator.generate(template_name=TemplateNames.CAMPAIGN.value, description="My description",
+                                      collapsible_elements=collapsible_elements)
+piece_of_content = dict(name="test-from-docker-5", title="Test From Docker5", authoringTemplateName="CNH_File",
+                        contentLibraryName="Web Content", path="test", description=str(page))
 print(json_data)
+print("-------------------------------------------")
+print(page)
 print(importer_service.save_item(piece_of_content))
