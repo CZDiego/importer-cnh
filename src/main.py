@@ -4,6 +4,7 @@
 import pandas
 import json
 from variables import *
+from service.importerservice import *
 
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
@@ -33,4 +34,10 @@ pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 
 json_data = json.dumps(pieces_of_content)
 
+piece_of_content = dict(name="test-from-docker-2",title="Test From Docker2",authoringTemplateName="CNH_File",contentLibraryName="Web Content",path="test")
+data = []
+data.append(piece_of_content)
+payload = dict(data=data)
+print(payload)
 print(json_data)
+print(ImporterService.saveItem(payload))

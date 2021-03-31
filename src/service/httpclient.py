@@ -7,5 +7,6 @@ class HttpClient(object):
         return r.json() if r.status_code == requests.codes.ok else r.text
 
     def post(url, payload):
-       r = requests.post(url, data=payload)
+       headers={'Content-type':'application/json', 'Accept':'application/json'}
+       r = requests.post(url, json=payload, headers=headers)
        return r.json() if r.status_code == requests.codes.ok else r.text
