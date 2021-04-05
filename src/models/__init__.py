@@ -1,3 +1,6 @@
+import json
+
+
 class PieceOfContent(object):
     def __init__(self, **kwargs):
         self.path = kwargs.get("path", None)
@@ -16,6 +19,9 @@ class PieceOfContent(object):
         self.owners = kwargs.get("owners", None)
         self.authors = kwargs.get("authors", None)
         self.effectiveDate = kwargs.get("effectiveDate", None)
+
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 
 class Resource(PieceOfContent):
