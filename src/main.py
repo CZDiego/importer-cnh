@@ -6,7 +6,7 @@ import json
 from variables import *
 import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
-from models import CollapsibleElement, Resource
+from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate
 
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
@@ -37,14 +37,18 @@ pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 json_data = json.dumps(pieces_of_content)
 
 TemplateNames = html_markup_generator.TemplateNames
-collapsible_elements = [CollapsibleElement("My first title", ["1:firstParagraph", "1:secondParagraph"]),
-                        CollapsibleElement("My second title", ["2:firstParagraph", "2:secondParagraph"])]
-page = html_markup_generator.generate(template_name=TemplateNames.CAMPAIGN.value, description="My description",
-                                      collapsible_elements=collapsible_elements)
-piece_of_content = Resource(name="test-from-docker-5", title="Test From Docker5", authoringTemplateName="CNH_File",
-                            contentLibraryName="Web Content", path="test", description=str(page))
+kit1 = HTMLElement("Google", tag_name="a", attrs={"href": "www.google.com"})
+kit2 = HTMLElement("Facebook", tag_name="a", attrs={"href": "www.facebook.com"})
+kit3 = HTMLElement("Instagram", tag_name="a", attrs={"href": "www.instagram.com"})
+kit4 = HTMLElement("Apple", tag_name="a", attrs={"href": "www.apple.com"})
+collapsible_elements = [CollapsibleElement("My first title", [kit1, kit2]),
+                        CollapsibleElement("My second title", [kit3, kit4])]
+campaign_body = CampaignHTMLBodyTemplate("Awesome Description", "<pre>This the WYSIWYG</pre>", collapsible_elements)
+page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
+campaign = Resource(name="campaign", title="Campaign", authoringTemplateName="CNH_File",
+                    contentLibraryName="Web Content", path="test", description=str(page))
 print(json_data)
 print("-------------------------------------------")
 print(page)
-print(json.dumps(piece_of_content.to_json()))
-print(importer_service.save_item(piece_of_content.to_json()))
+print(campaign.__dict__)
+print(importer_service.save_item(campaign.to_dict()))

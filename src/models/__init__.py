@@ -3,25 +3,29 @@ import json
 
 class PieceOfContent(object):
     def __init__(self, **kwargs):
-        self.path = kwargs.get("path", None)
-        self.contentLibraryName = kwargs.get("contentLibraryName", None)
-        self.authoringTemplateName = kwargs.get("authoringTemplateName", None)
-        self.name = kwargs.get("name", None)
-        self.title = kwargs.get("title", None)
-        self.approvers = kwargs.get("approvers", None)
-        self.categories = kwargs.get("categories", None)
-        self.description = kwargs.get("description", None)
-        self.creationDate = kwargs.get("creationDate", None)
-        self.expiryDate = kwargs.get("expiryDate", None)
-        self.generalDateOne = kwargs.get("generalDateOne", None)
-        self.generalDateTwo = kwargs.get("generalDateTwo", None)
-        self.keywords = kwargs.get("keywords", None)
-        self.owners = kwargs.get("owners", None)
-        self.authors = kwargs.get("authors", None)
-        self.effectiveDate = kwargs.get("effectiveDate", None)
+        self.path = kwargs.get("path")
+        self.contentLibraryName = kwargs.get("contentLibraryName")
+        self.authoringTemplateName = kwargs.get("authoringTemplateName")
+        self.name = kwargs.get("name")
+        self.title = kwargs.get("title")
+        self.approvers = kwargs.get("approvers")
+        self.categories = kwargs.get("categories")
+        self.description = kwargs.get("description")
+        self.creationDate = kwargs.get("creationDate")
+        self.expiryDate = kwargs.get("expiryDate")
+        self.generalDateOne = kwargs.get("generalDateOne")
+        self.generalDateTwo = kwargs.get("generalDateTwo")
+        self.keywords = kwargs.get("keywords")
+        self.owners = kwargs.get("owners")
+        self.authors = kwargs.get("authors")
+        self.effectiveDate = kwargs.get("effectiveDate")
 
-    def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__)
+    def to_dict(self):
+        return {
+            k: v
+            for k, v in self.__dict__.items()
+            if v is not None
+        }
 
 
 class Resource(PieceOfContent):
@@ -46,3 +50,17 @@ class CollapsibleElement(object):
         self.title_level = title_level
         self.title = title
         self.body_elements = body_elements
+
+
+class HTMLElement(object):
+    def __init__(self, text, attrs, tag_name="p"):
+        self.tag_name = tag_name
+        self.text = text
+        self.attrs = attrs
+
+
+class CampaignHTMLBodyTemplate(object):
+    def __init__(self, description, wysiwyg, collapsible_elements):
+        self.description = description
+        self.wysiwyg = wysiwyg
+        self.collapsible_elements = collapsible_elements
