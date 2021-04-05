@@ -6,13 +6,6 @@ class TemplateNames(Enum):
     CAMPAIGN = "CAMPAIGN"
 
 
-class CollapsibleElement(object):
-    def __init__(self, title, body_elements, title_level=3):
-        self.title_level = title_level
-        self.title = title
-        self.body_elements = body_elements
-
-
 def generate_campaign_template(**kwargs):
     description = kwargs.get("description")
     collapsible_elements = kwargs.get("collapsible_elements")
