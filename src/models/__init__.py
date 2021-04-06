@@ -1,13 +1,10 @@
-import json
-
-
 class PieceOfContent(object):
-    def __init__(self, **kwargs):
-        self.path = kwargs.get("path")
-        self.contentLibraryName = kwargs.get("contentLibraryName")
-        self.authoringTemplateName = kwargs.get("authoringTemplateName")
-        self.name = kwargs.get("name")
-        self.title = kwargs.get("title")
+    def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
+        self.authoringTemplateName = authoringTemplateName
+        self.contentLibraryName = contentLibraryName
+        self.path = path
+        self.name = name
+        self.title = title
         self.approvers = kwargs.get("approvers")
         self.categories = kwargs.get("categories")
         self.description = kwargs.get("description")
@@ -29,8 +26,8 @@ class PieceOfContent(object):
 
 
 class Resource(PieceOfContent):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
+        super().__init__(authoringTemplateName, contentLibraryName, path, name, title, **kwargs)
         self.Title = kwargs.get("Title", None)
         self.File = kwargs.get("File", None)
         self.description = kwargs.get("description", None)
