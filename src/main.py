@@ -51,10 +51,8 @@ post = Resource(name="post-7", title="Post 7", authoringTemplateName=authoringTe
                 contentLibraryName=contentLibraryName, path=path)
 post2 = Resource(name="post-8", title="Post 8", authoringTemplateName=authoringTemplateName,
                  contentLibraryName=contentLibraryName, path=path)
-response_post_1 = importer_service.save_item(post.to_dict())
-response_post_2 = importer_service.save_item(post2.to_dict())
-result_post_1 = utils.get_result(response_post_1)
-result_post_2 = utils.get_result(response_post_2)
+result_post_1 = importer_service.save_item(post.to_dict())
+result_post_2 = importer_service.save_item(post2.to_dict())
 related_post_1 = HTMLElement(result_post_1.get("title", ""), tag_name="a",
                              attrs={"href": utils.create_websphere_link(result_post_1.get("newId", ""),
                                                                         result_post_1.get("path", ""))})
@@ -76,6 +74,5 @@ campaign = Resource(name="campaign-11", title="Campaign 11", authoringTemplateNa
 print(json_data)
 print("-------------------------------------------")
 print(page)
-response = importer_service.save_item(campaign.to_dict())
-result = utils.get_result(response)
+result = importer_service.save_item(campaign.to_dict())
 print(result)

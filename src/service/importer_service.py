@@ -21,13 +21,14 @@ def save_item(piece_of_content, user=USER, password=PASSWORD):
     result = utils.get_result(response)
     errors = result.get("errors")
     if len(errors) > 0:
-        response = update_item(piece_of_content, user, password)
-    return response
+        result = update_item(piece_of_content, user, password)
+    return result
 
 
 def update_item(piece_of_content, user=USER, password=PASSWORD):
     data = [piece_of_content]
-    return post_items(data, user=user, password=password)
+    response = post_items(data, user=user, password=password)
+    return utils.get_result(response)
 
 
 def save_items(data):
