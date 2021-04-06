@@ -42,18 +42,30 @@ kit1 = HTMLElement("Google", tag_name="a", attrs={"href": "www.google.com"})
 kit2 = HTMLElement("Facebook", tag_name="a", attrs={"href": "www.facebook.com"})
 kit3 = HTMLElement("Instagram", tag_name="a", attrs={"href": "www.instagram.com"})
 kit4 = HTMLElement("Apple", tag_name="a", attrs={"href": "www.apple.com"})
+post = Resource(name="post-3", title="Post 3", authoringTemplateName="CNH_File",
+                contentLibraryName="Web Content", path="test")
+post2 = Resource(name="post-4", title="Post 4", authoringTemplateName="CNH_File",
+                 contentLibraryName="Web Content", path="test")
+response_post_1 = importer_service.save_item(post.to_dict())
+response_post_2 = importer_service.save_item(post2.to_dict())
+result_post_1 = utils.get_result(response_post_1)
+result_post_2 = utils.get_result(response_post_2)
+related_post_1 = HTMLElement(result_post_1.get("title", ""), tag_name="a",
+                             attrs={"href": utils.create_websphere_link(result_post_1.get("newId", ""),
+                                                                        result_post_1.get("path", "MyPath/name"))})
+related_post_2 = HTMLElement(result_post_2.get("title", ""), tag_name="a",
+                             attrs={"href": utils.create_websphere_link(result_post_2.get("newId", ""),
+                                                                        result_post_2.get("path", "MyPath/name2"))})
 collapsible_elements = [CollapsibleElement("My first title", [kit1, kit2]),
-                        CollapsibleElement("My second title", [kit3, kit4])]
+                        CollapsibleElement("My second title", [kit3, kit4]),
+                        CollapsibleElement("Related Content", [related_post_1, related_post_2])]
 campaign_body = CampaignHTMLBodyTemplate("Awesome Description", "<pre>This the WYSIWYG</pre>", collapsible_elements)
 page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
-campaign = Resource(name="campaign 7", title="Campaign 7", authoringTemplateName="CNH_File",
+campaign = Resource(name="campaign-9", title="Campaign 9", authoringTemplateName="CNH_File",
                     contentLibraryName="Web Content", path="test", description=str(page))
-print(json_data)
+# print(json_data)
 print("-------------------------------------------")
 print(page)
-print(campaign.__dict__)
 response = importer_service.save_item(campaign.to_dict())
 result = utils.get_result(response)
 print(result)
-print(result.get("newId"))
-print(result.get("path"))

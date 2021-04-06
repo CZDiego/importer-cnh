@@ -17,7 +17,7 @@ def generate_campaign_template(html_body_template):
         for collapsible_element in collapsible_elements:
             markup.h3(collapsible_element.title)
             for body_element in collapsible_element.body_elements:
-                markup.__getattr__(body_element.tag_name)(body_element.text, **body_element.attrs)
+                markup.p(markup.__getattr__(body_element.tag_name)(body_element.text, **body_element.attrs))
     return markup
 
 
