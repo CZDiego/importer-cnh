@@ -7,6 +7,7 @@ from variables import *
 import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
 from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate
+import utils
 
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
@@ -45,10 +46,14 @@ collapsible_elements = [CollapsibleElement("My first title", [kit1, kit2]),
                         CollapsibleElement("My second title", [kit3, kit4])]
 campaign_body = CampaignHTMLBodyTemplate("Awesome Description", "<pre>This the WYSIWYG</pre>", collapsible_elements)
 page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
-campaign = Resource(name="campaign", title="Campaign", authoringTemplateName="CNH_File",
+campaign = Resource(name="campaign 7", title="Campaign 7", authoringTemplateName="CNH_File",
                     contentLibraryName="Web Content", path="test", description=str(page))
 print(json_data)
 print("-------------------------------------------")
 print(page)
 print(campaign.__dict__)
-print(importer_service.save_item(campaign.to_dict()))
+response = importer_service.save_item(campaign.to_dict())
+result = utils.get_result(response)
+print(result)
+print(result.get("newId"))
+print(result.get("path"))

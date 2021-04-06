@@ -4,6 +4,7 @@ config = configparser.ConfigParser()
 config.read("config.ini")
 
 IMPORTER_SERVICE_VARIABLES = config["IMPORTER_SERVICE_VARIABLES"]
+WEBSPHERE_VARIABLES = config["WEBSPHERE_VARIABLES"]
 
 class DataMapping:
     def __init__(self, columns, auth_template):
