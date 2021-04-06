@@ -12,6 +12,15 @@ from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTe
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
 
+def is_json_serializable(value):
+
+    try:
+        json.dumps(value)
+        return True
+    except TypeError:
+        return False
+
+
 def parse_pieces_of_content(path):
     result = []
     excel_data = pandas.read_excel(path)
@@ -19,13 +28,19 @@ def parse_pieces_of_content(path):
     for index, row in excel_data.iterrows():
         for piece_of_content_mapping in PIECES_OF_CONTENT_MAPPING:
 
-            if pandas.isnull(row[piece_of_content_mapping.columns["master_id"]]):
+            if pandas.isnull(row[piece_of_content_mapping.properties.masterId]):
                 continue
 
             ans = dict()
-            for column_name, column_mapping in piece_of_content_mapping.columns.items():
-                ans[column_name] = None if pandas.isnull(row[column_mapping]) else row[column_mapping]
+            for column_name, column_mapping in piece_of_content_mapping.properties.__dict__.items():
+                ans[column_name] = None if column_mapping is None or pandas.isnull(row[column_mapping]) else row[
+                    column_mapping]
+
+                if not is_json_serializable(ans[column_name]):
+                    ans[column_name] = str(ans[column_name])
+
             ans[AUTH_TEMPLATE] = piece_of_content_mapping.auth_template
+            ans[CONTENT_TYPE] = piece_of_content_mapping.content_type
             result.append(ans)
 
     return result
