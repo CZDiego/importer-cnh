@@ -52,10 +52,10 @@ result_post_1 = utils.get_result(response_post_1)
 result_post_2 = utils.get_result(response_post_2)
 related_post_1 = HTMLElement(result_post_1.get("title", ""), tag_name="a",
                              attrs={"href": utils.create_websphere_link(result_post_1.get("newId", ""),
-                                                                        result_post_1.get("path", "MyPath/name"))})
+                                                                        result_post_1.get("path", ""))})
 related_post_2 = HTMLElement(result_post_2.get("title", ""), tag_name="a",
                              attrs={"href": utils.create_websphere_link(result_post_2.get("newId", ""),
-                                                                        result_post_2.get("path", "MyPath/name2"))})
+                                                                        result_post_2.get("path", ""))})
 collapsible_elements = [CollapsibleElement("My first title", [kit1, kit2]),
                         CollapsibleElement("My second title", [kit3, kit4]),
                         CollapsibleElement("Related Content", [related_post_1, related_post_2])]
