@@ -38,10 +38,10 @@ pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 json_data = json.dumps(pieces_of_content)
 
 TemplateNames = html_markup_generator.TemplateNames
-kit1 = HTMLElement("Google", tag_name="a", attrs={"href": "www.google.com"})
-kit2 = HTMLElement("Facebook", tag_name="a", attrs={"href": "www.facebook.com"})
-kit3 = HTMLElement("Instagram", tag_name="a", attrs={"href": "www.instagram.com"})
-kit4 = HTMLElement("Apple", tag_name="a", attrs={"href": "www.apple.com"})
+kit1 = HTMLElement("Google", tag_name="a", attrs={"href": "https://www.google.com"})
+kit2 = HTMLElement("Facebook", tag_name="a", attrs={"href": "https://www.facebook.com"})
+kit3 = HTMLElement("Instagram", tag_name="a", attrs={"href": "https://www.instagram.com"})
+kit4 = HTMLElement("Apple", tag_name="a", attrs={"href": "https://www.apple.com"})
 post = Resource(name="post-3", title="Post 3", authoringTemplateName="CNH_File",
                 contentLibraryName="Web Content", path="test")
 post2 = Resource(name="post-4", title="Post 4", authoringTemplateName="CNH_File",
@@ -63,7 +63,7 @@ campaign_body = CampaignHTMLBodyTemplate("Awesome Description", "<pre>This the W
 page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
 campaign = Resource(name="campaign-9", title="Campaign 9", authoringTemplateName="CNH_File",
                     contentLibraryName="Web Content", path="test", description=str(page))
-# print(json_data)
+print(json_data)
 print("-------------------------------------------")
 print(page)
 response = importer_service.save_item(campaign.to_dict())
