@@ -53,7 +53,6 @@ pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
 
 json_data = json.dumps(pieces_of_content)
 
-print(json_data)
 print("-------------------------------------------")
 
 TemplateNames = html_markup_generator.TemplateNames
