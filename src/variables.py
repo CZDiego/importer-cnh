@@ -23,14 +23,37 @@ RESOURCE = "Resource"
 # Add posts
 for i in range(1, 6):
 
-    # Add post files
-    # for j in range(1, 6):
-#         post_file = Resource(masterId="Post 1 File 1 title", title="Post 1 File 1 title",
-#                              targetingRole="Post 1 File 1 Targets")
-    post = Resource(masterId="Post " + str(i) + " master id", name="Post " + str(i) + " Title",
-                    title="Post " + str(i) + " Title", description="Post " + str(i) + " Description",
-                    geographyVisibility="id_pays", brandContractVisibility="theme", contentLibraryName="langue",
-                    creationDate="Post 1 created", path="Post " + str(i) + " Banner", authoringTemplateName="id_pays")
+    # Add post files for each post
+    for j in range(1, 6):
+
+        post_file = Resource(masterId="Post " + str(i) + " File " + str(j) + " title",
+                             authoringTemplateName="id_pays",
+                             name="Post " + str(i) + " File " + str(j) + " title",
+                             title="Post " + str(i) + " File " + str(j) + " title",
+                             geographyVisibility="id_pays",
+                             brandContractVisibility="theme",
+                             targetingRole="Post " + str(i) + " File " + str(j) + " Targets",
+                             contentLibraryName="langue",
+                             linkURL="Post " + str(i) + " File " + str(j) + " LINK",
+                             overrideLink="Post " + str(i) + " File " + str(j) + " URL",
+                             path="Post " + str(i) + " Banner")
+
+        PIECES_OF_CONTENT_MAPPING.append(DataMapping(post_file, RESOURCE, "post_file"))
+
+    post = Resource(masterId="Post " + str(i) + " master id",
+                    authoringTemplateName="id_pays",
+                    name="Post " + str(i) + " Title",
+                    title="Post " + str(i) + " Title",
+                    description="Post " + str(i) + " Description",
+                    geographyVisibility="id_pays",
+                    brandContractVisibility="theme",
+                    targetingRole="Post " + str(i) + " Targets",
+                    contentLibraryName="langue",
+                    creationDate="Post " + str(i) + " created",
+                    path="Post " + str(i) + " Banner",
+                    thumbnail="Post " + str(i) + " Thumbnail",
+                    image="Post " + str(i) + " Banner")
+
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
 
 
