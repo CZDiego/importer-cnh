@@ -78,7 +78,9 @@ class CollapsibleElement(object):
 
 
 class HTMLElement(object):
-    def __init__(self, text, attrs, tag_name="p"):
+    def __init__(self, tag_name, text=None, attrs=None):
+        if attrs is None:
+            attrs = {}
         self.tag_name = tag_name
         self.text = text
         self.attrs = attrs

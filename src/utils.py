@@ -2,6 +2,7 @@ import re
 import variables
 
 AssetsWebSphereBaseURL = variables.WEBSPHERE_VARIABLES.get("AssetsWebSphereBaseURL")
+CONTENT_MAPPING_VARIABLES = variables.CONTENT_MAPPING_VARIABLES
 
 
 def create_websphere_link(uuid, path):
@@ -25,3 +26,8 @@ def to_kebab_case(string):
 def get_result(response):
     report = response.get("report", {})
     return report[0] if len(report) > 0 else {}
+
+
+def get_mapped_value(key):
+    key = key.lower()
+    return CONTENT_MAPPING_VARIABLES.get(key)
