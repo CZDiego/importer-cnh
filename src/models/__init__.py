@@ -8,6 +8,7 @@ class PieceOfContent(object):
         self.approvers = kwargs.get("approvers")
         self.categories = kwargs.get("categories")
         self.description = kwargs.get("description")
+        self.wysiwyg = kwargs.get("wysiwyg")
         self.creationDate = kwargs.get("creationDate")
         self.expiryDate = kwargs.get("expiryDate")
         self.generalDateOne = kwargs.get("generalDateOne")
