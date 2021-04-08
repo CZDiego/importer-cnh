@@ -58,3 +58,48 @@ for i in range(1, 6):
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
 
 
+# Add kits
+for i in range(1, 6):
+
+    # Add kit file for each kit
+    for j in range(1, 21):
+
+        kit_file = Resource(masterId="Communication kit section " + str(i) + " - file " + str(j) + " title",
+                            authoringTemplateName="id_pays",
+                            name="Communication kit section " + str(i) + " - file " + str(j) + " title",
+                            title="Communication kit section " + str(i) + " - file " + str(j) + " title",
+                            geographyVisibility="id_pays",
+                            brandContractVisibility="theme",
+                            contentLibraryName="langue",
+                            linkURL="Communication kit section " + str(i) + " - file " + str(j) + " LINK",
+                            path="Communication kit section " + str(i) + " - file " + str(j) + " title")
+
+        PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit_file, RESOURCE, "kit_file"))
+
+    kit = Resource(masterId="Communication kit files section " + str(i),
+                   authoringTemplateName="id_pays",
+                   name="Communication kit files section " + str(i),
+                   title="Communication kit files section " + str(i),
+                   geographyVisibility="id_pays",
+                   brandContractVisibility="theme",
+                   contentLibraryName="langue",
+                   creationDate="created",
+                   path="Communication kit files section " + str(i))
+
+    PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
+
+
+# Add page
+page = Resource(masterId="master_id",
+                authoringTemplateName="id_pays",
+                name="Page title",
+                title="Page title",
+                geographyVisibility="id_pays",
+                brandContractVisibility="theme",
+                contentLibraryName="langue",
+                path="Page title",
+                creationDate="created",
+                image="Introvisuel - main banner on page",
+                thumbnail="Thumbnail (for catalog page)",
+                description="Page Short Description")
+PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))

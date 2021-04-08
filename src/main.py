@@ -46,11 +46,32 @@ def parse_pieces_of_content(excel_path):
     return pieces_of_content_result
 
 
+def clean_pieces_of_content(items):
+    post_files = []
+    kit_files = []
+    clean_items = []
+
+    for item in items:
+        content_type = item["contentType"]
+        if content_type == "kit_file":
+            download = dict(title=item["title"], linkURL=item["linkURL"])
+            kit_files.append(download)
+        elif content_type == "kit":
+            item["downloads"] = kit_files
+            kit_files = []
+            clean_items.append(item)
+        else:
+            clean_items.append(item)
+    return clean_items
+
+
 # Main
 pieces_of_content = parse_pieces_of_content(EXCEL_PATH)
+pieces_of_content = clean_pieces_of_content(pieces_of_content)
 
-json_data = json.dumps(pieces_of_content)
+json_data = json.dumps(pieces_of_content, indent=2)
 
+print(json_data)
 print("-------------------------------------------")
 
 TemplateNames = html_markup_generator.TemplateNames
