@@ -25,33 +25,25 @@ class PieceOfContent(object):
         }
 
 
-class Resource(PieceOfContent):
-
+class CommonAuthoringTemplate(PieceOfContent):
     def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
         super().__init__(authoringTemplateName, contentLibraryName, path, name, title, **kwargs)
-        self.masterId = kwargs.get("masterId", None)
         self.brandContractVisibility = kwargs.get("brandContractVisibility", None)
         self.geographyVisibility = kwargs.get("geographyVisibility", None)
         self.dealershipVisibility = kwargs.get("dealershipVisibility", None)
+        self.dealershipTypeVisibility = kwargs.get("dealershipTypeVisibility", None)
         self.roleVisibility = kwargs.get("roleVisibility", None)
         self.contentAuditor = kwargs.get("contentAuditor", None)
         self.shortTitle = kwargs.get("shortTitle", None)
         self.summary = kwargs.get("summary", None)
+        self.masterId = kwargs.get("masterId", None)
         self.thumbnail = kwargs.get("thumbnail", None)
         self.thumbnailCaption = kwargs.get("thumbnailCaption", None)
         self.alternateByline = kwargs.get("alternateByline", None)
         self.image = kwargs.get("image", None)
         self.imageCaption = kwargs.get("imageCaption", None)
-        self.icon = kwargs.get("icon", None)
         self.body = kwargs.get("body", None)
-        self.transformHeadersH2 = kwargs.get("transformHeadersH2", None)
-        self.transformHeadersH3 = kwargs.get("transformHeadersH3", None)
-        self.scopeSection = kwargs.get("scopeSection", None)
-        self.linkURL = kwargs.get("linkURL", None)
-        self.overrideLink = kwargs.get("overrideLink", None)
         self.attachment = kwargs.get("attachment", None)
-        self.attachmentContentDescription = kwargs.get("attachmentContentDescription", None)
-        self.attachmentImage = kwargs.get("attachmentImage", None)
         self.downloads = kwargs.get("downloads", None)
         self.moreInformation = kwargs.get("moreInformation", None)
         self.relatedContent = kwargs.get("relatedContent", None)
@@ -59,15 +51,34 @@ class Resource(PieceOfContent):
         self.sidebarComponent1 = kwargs.get("sidebarComponent1", None)
         self.sidebarComponent2 = kwargs.get("sidebarComponent2", None)
         self.sidebarComponent3 = kwargs.get("sidebarComponent3", None)
-        self.relatedHubs = kwargs.get("relatedHubs", None)
-        self.overrideAudiences = kwargs.get("overrideAudiences", None)
         self.contentType = kwargs.get("contentType", None)
         self.topics = kwargs.get("topics", None)
         self.targetingRole = kwargs.get("targetingRole", None)
         self.siteLocation = kwargs.get("siteLocation", None)
+        self.mlTranslationsTable = kwargs.get("mlTranslationsTable", None)
         self.topComponent = kwargs.get("topComponent", None)
         self.bottomComponent = kwargs.get("bottomComponent", None)
-        self.mlTranslationsTable = kwargs.get("mlTranslationsTable", None)
+
+
+class Resource(CommonAuthoringTemplate):
+    def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
+        super().__init__(authoringTemplateName, contentLibraryName, path, name, title, **kwargs)
+        self.icon = kwargs.get("icon", None)
+        self.transformHeadersH2 = kwargs.get("transformHeadersH2", None)
+        self.transformHeadersH3 = kwargs.get("transformHeadersH3", None)
+        self.scopeSection = kwargs.get("scopeSection", None)
+        self.linkURL = kwargs.get("linkURL", None)
+        self.overrideLink = kwargs.get("overrideLink", None)
+        self.attachmentContentDescription = kwargs.get("attachmentContentDescription", None)
+        self.attachmentImage = kwargs.get("attachmentImage", None)
+        self.relatedHubs = kwargs.get("relatedHubs", None)
+        self.overrideAudiences = kwargs.get("overrideAudiences", None)
+
+
+class News(CommonAuthoringTemplate):
+    def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
+        super().__init__(authoringTemplateName, contentLibraryName, path, name, title, **kwargs)
+        self.attachmentDescription = kwargs.get("attachmentDescription", None)
 
 
 class CollapsibleElement(object):
