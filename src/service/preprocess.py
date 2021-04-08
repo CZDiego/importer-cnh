@@ -1,11 +1,21 @@
 import pandas
 import json
-from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE
+from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, EXCEL_MAPPING_VARIABLES
 import utils
 from models import Resource
 
 
 PIECES_OF_CONTENT_MAPPING = []
+HUBS = []
+TOPICS = []
+
+# Add category list
+for i in range(1, 11):
+    HUBS.append(EXCEL_MAPPING_VARIABLES.get("hub" + str(i)))
+
+# Add topic list
+for i in range(1, 10):
+    TOPICS.append(EXCEL_MAPPING_VARIABLES.get("topic" + str(i)))
 
 
 class DataMapping:
@@ -129,6 +139,18 @@ def parse_pieces_of_content(excel_path):
                 if not is_json_serializable(ans[column_name]):
                     ans[column_name] = str(ans[column_name])
 
+            categories = []
+            for hub in HUBS:
+                if not pandas.isnull(row[hub]):
+                    categories.append(hub.lower())
+
+            topics = []
+            for topic in TOPICS:
+                if not pandas.isnull(row[topic]):
+                    topics.append(topic.lower())
+
+            ans["categories"] = categories
+            ans["topics"] = topics
             ans[AUTH_TEMPLATE] = piece_of_content_mapping.auth_template
             ans[CONTENT_TYPE] = piece_of_content_mapping.content_type
             pieces_of_content_result.append(ans)
@@ -142,6 +164,9 @@ def clean_piece_of_content(item):
     item["geographyVisibility"] = utils.get_mapped_value(item["geographyVisibility"])
     item["name"] = utils.to_kebab_case(item["name"])
     item["contentLibraryName"] = utils.get_mapped_value(item["contentLibraryName"])
+
+    item["categories"] = [utils.get_mapped_value(x) for x in item["categories"]]
+    item["topics"] = [utils.get_mapped_value(x) for x in item["topics"]]
 
     return item
 
