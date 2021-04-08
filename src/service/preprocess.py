@@ -47,7 +47,8 @@ for i in range(1, 6):
                     creationDate="Post " + str(i) + " created",
                     path="Post " + str(i) + " Banner",
                     thumbnail="Post " + str(i) + " Thumbnail",
-                    image="Post " + str(i) + " Banner")
+                    image="Post " + str(i) + " Banner",
+                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
 
@@ -78,7 +79,8 @@ for i in range(1, 6):
                    brandContractVisibility="theme",
                    contentLibraryName="langue",
                    creationDate="created",
-                   path="Communication kit files section " + str(i))
+                   path="Communication kit files section " + str(i),
+                   siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
 
@@ -95,7 +97,8 @@ page = Resource(masterId="master_id",
                 creationDate="created",
                 image="Introvisuel - main banner on page",
                 thumbnail="Thumbnail (for catalog page)",
-                description="Page Short Description")
+                description="Page Short Description",
+                siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
 PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
@@ -137,6 +140,7 @@ def clean_piece_of_content(item):
     item["brandContractVisibility"] = utils.get_mapped_value(item["brandContractVisibility"])
     item["geographyVisibility"] = utils.get_mapped_value(item["geographyVisibility"])
     item["name"] = utils.to_kebab_case(item["name"])
+    item["contentLibraryName"] = utils.get_mapped_value(item["contentLibraryName"])
 
     return item
 
@@ -149,11 +153,21 @@ def clean_pieces_of_content(items):
     for item in items:
         content_type = item["contentType"]
         if content_type == "kit_file":
-            download = dict(title=item["title"], linkURL=item["linkURL"])
-            kit_files.append(download)
+            attachment = dict(title=item["title"], link=item["linkURL"],
+                              fileName=utils.get_file_name_from_url(item["linkURL"]))
+            kit_files.append(attachment)
         elif content_type == "kit":
-            item["downloads"] = kit_files
+            item["attachment"] = kit_files
             kit_files = []
+            clean_items.append(clean_piece_of_content(item))
+        elif content_type == "post_file":
+            attachment = dict(title=item["title"], link=item["linkURL"], url=item["overrideLink"],
+                              fileName=utils.get_file_name_from_url(item["linkURL"]))
+            post_files.append(attachment)
+        elif content_type == "post":
+            # Todo, only add post files with the same target as post
+            item["attachment"] = post_files
+            post_files = []
             clean_items.append(clean_piece_of_content(item))
         else:
             clean_items.append(clean_piece_of_content(item))

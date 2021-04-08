@@ -31,3 +31,7 @@ def get_result(response):
 def get_mapped_value(key):
     key = key.lower()
     return CONTENT_MAPPING_VARIABLES.get(key)
+
+
+def get_file_name_from_url(url):
+    return None if url is None else url.rsplit('/', 1)[-1]
