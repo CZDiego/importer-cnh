@@ -12,9 +12,13 @@ def create_rich_text(items):
     for item in items:
         try:
             if item.text is not None:
-                markup.p(markup.__getattr__(item.tag_name)(item.text))
+                markup.p()
+                markup.__getattr__(item.tag_name)(item.text, **item.attrs)
+                markup.p.close()
             else:
-                markup.p(markup.__getattr__(item.tag_name)())
+                markup.p()
+                markup.__getattr__(item.tag_name)()
+                markup.p.close()
         except Exception as e:
             logging.exception(e)
     return str(markup)
@@ -31,7 +35,9 @@ def generate_campaign_template(html_body_template):
         for collapsible_element in collapsible_elements:
             markup.h3(collapsible_element.title)
             for body_element in collapsible_element.body_elements:
-                markup.p(markup.__getattr__(body_element.tag_name)(body_element.text, **body_element.attrs))
+                markup.p()
+                markup.__getattr__(body_element.tag_name)(body_element.text, **body_element.attrs)
+                markup.p.close()
     return str(markup)
 
 
