@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class PieceOfContent(object):
     def __init__(self, authoringTemplateName, contentLibraryName, path, name, title, **kwargs):
         self.authoringTemplateName = authoringTemplateName
@@ -103,3 +106,13 @@ class CampaignHTMLBodyTemplate(object):
         self.description = description
         self.wysiwyg = wysiwyg
         self.collapsible_elements = collapsible_elements
+
+
+class DealershipTypes(Enum):
+    DEALER = "Dealer"
+    SUB_DEALER = "Sub-Dealer"
+
+
+class TransformHeaders(Enum):
+    AS_TYPED = "As Typed"
+    COLLAPSIBLE_SECTIONS = "Collapsible Sections"

@@ -3,13 +3,12 @@ import json
 from variables import *
 import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
-from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate
+from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate, TransformHeaders
 import utils
 import service.preprocess as preprocessing
 
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
-
 
 # Main
 pieces_of_content = preprocessing.get_pieces_of_content(EXCEL_PATH)
@@ -31,9 +30,11 @@ try:
     kit3 = HTMLElement("a", text="Instagram", attrs={"href": "https://www.instagram.com"})
     kit4 = HTMLElement("a", text="Apple", attrs={"href": "https://www.apple.com"})
     post = Resource(name="post-1", title="Post 1", authoringTemplateName=authoringTemplateName,
-                    contentLibraryName=contentLibraryName, path=path, transformHeadersH3="Collapsible Sections")
+                    contentLibraryName=contentLibraryName, path=path,
+                    transformHeadersH3=TransformHeaders.COLLAPSIBLE_SECTIONS.value)
     post2 = Resource(name="post-2", title="Post 2", authoringTemplateName=authoringTemplateName,
-                     contentLibraryName=contentLibraryName, path=path, transformHeadersH3="Collapsible Sections")
+                     contentLibraryName=contentLibraryName, path=path,
+                     transformHeadersH3=TransformHeaders.COLLAPSIBLE_SECTIONS.value)
     result_post_1 = importer_service.save_item(post.to_dict())
     result_post_2 = importer_service.save_item(post2.to_dict())
     related_post_1 = HTMLElement("a", text=result_post_1.get("title", ""),
@@ -61,7 +62,8 @@ try:
     page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
     campaign = Resource(name="campaign-1", title="Campaign 1", authoringTemplateName=authoringTemplateName,
                         contentLibraryName=contentLibraryName, path=path, body=str(page),
-                        transformHeadersH3="Collapsible Sections", downloads=downloads, relatedContent=related_content)
+                        transformHeadersH3=TransformHeaders.COLLAPSIBLE_SECTIONS.value, downloads=downloads,
+                        relatedContent=related_content)
     print("-------------------------------------------")
     print(page)
     result = importer_service.save_item(campaign.to_dict())
