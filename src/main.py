@@ -8,9 +8,7 @@ import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
 from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate
 import utils
-import sys
 
-sys.tracebacklimit = 0
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
@@ -101,4 +99,14 @@ print(utils.get_mapped_value("cih"))
 print(utils.get_mapped_value("ADVANCED FARMING SYSTEMS"))
 print(utils.get_mapped_value("UK"))
 
-print(json_data)
+# print(json_data)
+
+
+div = HTMLElement("div")
+bannerTitle = HTMLElement("span", "Facebook Banners")
+hr = HTMLElement("hr")
+banner1 = HTMLElement("a", "Facebook Banner 1", dict(href="#"))
+banner2 = HTMLElement("a", "Facebook Banner 2", dict(href="#"))
+
+downloads = html_markup_generator.create_rich_text([div, bannerTitle, hr, banner1, banner2])
+print(downloads)
