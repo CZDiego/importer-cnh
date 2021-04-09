@@ -214,7 +214,7 @@ def clean_pieces_of_content(items):
                             fileName=utils.get_download_path(item.linkURL))
             kit_files.append(download)
         elif content_type == "kit":
-            item.download = kit_files
+            item.downloads = kit_files
             kit_files = []
             clean_items.append(clean_piece_of_content(item))
         elif content_type == "post_file":
@@ -223,13 +223,13 @@ def clean_pieces_of_content(items):
                             dealershipTypeVisibility=item.dealershipTypeVisibility)
             post_files.append(download)
         elif content_type == "post":
-            item.download = []
+            item.downloads = []
 
             # Only add post files with the same dealershipTypeVisibility as the post parent
             for file in post_files:
                 if are_lists_equal(item.dealershipTypeVisibility.split(","), file["dealershipTypeVisibility"].split(",")):
                     del file["dealershipTypeVisibility"]
-                    item.download.append(file)
+                    item.downloads.append(file)
 
             post_files = []
             clean_items.append(clean_piece_of_content(item))
