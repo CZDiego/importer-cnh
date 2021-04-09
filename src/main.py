@@ -8,6 +8,8 @@ from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTe
 import utils
 import service.preprocess as preprocessing
 
+TemplateNames = html_markup_generator.TemplateNames
+
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
@@ -25,7 +27,9 @@ def get_downloads_rich_text(downloads):
     html_downloads = []
     for download in downloads:
         text = download.get("title")
-        link = WEBSPHERE_VARIABLES.get("StorageAPIBaseURL") + download.get("fileName")
+        file_name = download.get("fileName", "#")
+        file_name = "#" if file_name is None else file_name
+        link = WEBSPHERE_VARIABLES.get("StorageAPIBaseURL") + file_name
         attrs = dict(href=link, target="_blank")
         html_downloads.append(HTMLElement("a", text=text, attrs=attrs))
     return html_downloads
@@ -43,9 +47,10 @@ def get_related_content_rich_text(related_content):
 
 
 def map_item(item):
-    type = item.get("contentType")
-    if type is not None or type is not "page":
+    content_type = item.get("contentType")
+    if content_type is not None or content_type is not "page":
         downloads = item.get("downloads")
+        item["originalDownloads"] = downloads
         related_content = item.get("relatedContent")
         html_downloads = []
         html_related_content = []
@@ -60,7 +65,79 @@ def map_item(item):
 
 json_array = list(map(map_item, json_array))
 json_data = json.dumps(json_array, indent=2)
-print(json_data)
+
+
+def init_migration(items):
+    print(json.dumps(items, indent=2))
+    posts = []
+    kits = []
+    pages = []
+    for item in items:
+        try:
+            content_type = item.get("contentType")
+            if content_type is "post" or content_type is "kit":
+                print("Saving " + content_type)
+                del item["contentType"]
+                response = importer_service.save_item(item)
+                print(json.dumps(response, indent=2))
+                saved_item = dict(response=response, item=item)
+                posts.append(saved_item) if content_type is "post" else kits.append(saved_item)
+            elif content_type is "page":
+                page_type = item.get("pageType", "campaign").lower()
+                html_posts = []
+                for post in posts:
+                    post_item = post.get("item")
+                    post_response = post.get("response")
+                    text = post_item.get("title")
+                    uuid = post_response.get("newId")
+                    path = post_response.get("path")
+                    link = utils.create_websphere_link(uuid, path)
+                    attrs = dict(href=link)
+                    html_posts.append(HTMLElement("a", text=text, attrs=attrs))
+                item["relatedContent"] = html_markup_generator.create_rich_text(html_posts)
+                print(page_type)
+                if page_type == "product" or page_type == "generic":
+                    print("Inside product or generic")
+                    html_kits = ""
+                    print(kits)
+                    for kit in kits:
+                        kit_item = kit.get("item")
+                        downloads = kit_item.get("downloads")
+                        html_kits += downloads
+                    print(html_kits)
+                    item["downloads"] = html_kits
+                    body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""))
+                    print("body")
+                    item["body"] = html_markup_generator.generate(body, template_name=TemplateNames.CAMPAIGN.value)
+                elif page_type == "campaign":
+                    print("Inside campaign")
+                    html_kits = []
+                    for kit in kits:
+                        kit_item = kit.get("item")
+                        title = kit_item.get("title")
+                        original_downloads = kit_item.get("originalDownloads")
+                        body_elements = get_downloads_rich_text(original_downloads)
+                        html_kits.append(CollapsibleElement(title, body_elements=body_elements))
+                    body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""), html_kits)
+                    item["body"] = html_markup_generator.generate(body, template_name=TemplateNames.CAMPAIGN.value)
+                print("Saving page")
+                del item["contentType"]
+                item["transformHeadersH3"] = TransformHeaders.COLLAPSIBLE_SECTIONS.value
+                saved_page = importer_service.save_item(item)
+                print(json.dumps(saved_page, indent=2))
+                saved_page["posts"] = posts
+                saved_page["kits"] = kits
+                pages.append(saved_page)
+                kits = []
+                posts = []
+
+        except Exception as e:
+            logging.exception(e)
+
+
+init_migration(json_array[:4])
+
+# print(json_data)
 print("-------------------------------------------")
 """
 TemplateNames = html_markup_generator.TemplateNames
