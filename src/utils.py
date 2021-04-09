@@ -34,4 +34,12 @@ def get_mapped_value(key):
 
 
 def get_file_name_from_url(url):
-    return None if url is None else url.rsplit('/', 1)[-1]
+    return "" if url is None else url.rsplit('/', 1)[-1]
+
+
+def get_download_path(url):
+    return "businessconnection/" + get_file_name_from_url(url)
+
+
+def get_image_path(url):
+    return "/appl/lfs/" + get_download_path(url)

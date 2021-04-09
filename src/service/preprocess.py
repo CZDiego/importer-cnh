@@ -1,5 +1,6 @@
 import pandas
 import json
+import time
 from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, EXCEL_MAPPING_VARIABLES
 import utils
 from models import Resource
@@ -116,6 +117,10 @@ page = Resource(masterId="master_id",
 PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
+def if_timestamp_convert_to_millis(value):
+    return int(time.mktime(value.timetuple())) if isinstance(value, pandas.Timestamp) else value
+
+
 def is_json_serializable(value):
     try:
         json.dumps(value)
@@ -144,10 +149,10 @@ def parse_pieces_of_content(excel_path):
 
             for column_name, column_mapping in piece_of_content_mapping.properties.__dict__.items():
                 setattr(piece, column_name, None if column_mapping is None or pandas.isnull(row[column_mapping]) \
-                        else row[column_mapping])
+                        else if_timestamp_convert_to_millis(row[column_mapping]))
 
-                if not is_json_serializable(getattr(piece, column_name)):
-                    setattr(piece, column_name, str(getattr(piece, column_name)))
+                # if not is_json_serializable(getattr(piece, column_name)):
+                #    setattr(piece, column_name, str(getattr(piece, column_name)))
 
             categories = []
             for hub in HUBS:
@@ -177,11 +182,13 @@ def clean_piece_of_content(item):
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
     item.path = utils.get_mapped_value(item.path)
 
-    item.thumbnail = utils.get_file_name_from_url(item.thumbnail)
-    item.image = utils.get_file_name_from_url(item.image)
+    item.thumbnail = utils.get_image_path(item.thumbnail)
+    item.image = utils.get_image_path(item.image)
 
-    item.categories = [utils.get_mapped_value(x) for x in item.categories]
-    item.topics = [utils.get_mapped_value(x) for x in item.topics]
+    item.categories = None if len(item.categories) == 0 \
+        else ",".join([utils.get_mapped_value(x) for x in item.categories])
+    item.topics = None if len(item.topics) == 0 \
+        else ",".join([utils.get_mapped_value(x) for x in item.topics])
 
     dealership_type_visibility = item.dealershipTypeVisibility.split(",")
     mapped_dealership_type_visibility = []
@@ -190,8 +197,7 @@ def clean_piece_of_content(item):
         if mapping is not None:
             mapped_dealership_type_visibility.append(mapping)
 
-    separator = ","
-    item.dealershipTypeVisibility = separator.join(mapped_dealership_type_visibility)
+    item.dealershipTypeVisibility = ",".join(mapped_dealership_type_visibility)
 
     return item
 
@@ -204,26 +210,26 @@ def clean_pieces_of_content(items):
     for item in items:
         content_type = item.contentType
         if content_type == "kit_file":
-            attachment = dict(title=item.title, link=item.linkURL,
-                              fileName=utils.get_file_name_from_url(item.linkURL))
-            kit_files.append(attachment)
+            download = dict(title=item.title, link=item.linkURL,
+                            fileName=utils.get_download_path(item.linkURL))
+            kit_files.append(download)
         elif content_type == "kit":
-            item.attachment = kit_files
+            item.download = kit_files
             kit_files = []
             clean_items.append(clean_piece_of_content(item))
         elif content_type == "post_file":
-            attachment = dict(title=item.title, link=item.linkURL, url=item.overrideLink,
-                              fileName=utils.get_file_name_from_url(item.linkURL),
-                              dealershipTypeVisibility=item.dealershipTypeVisibility)
-            post_files.append(attachment)
+            download = dict(title=item.title, link=item.linkURL, url=item.overrideLink,
+                            fileName=utils.get_download_path(item.linkURL),
+                            dealershipTypeVisibility=item.dealershipTypeVisibility)
+            post_files.append(download)
         elif content_type == "post":
-            item.attachment = []
+            item.download = []
 
             # Only add post files with the same dealershipTypeVisibility as the post parent
             for file in post_files:
                 if are_lists_equal(item.dealershipTypeVisibility.split(","), file["dealershipTypeVisibility"].split(",")):
                     del file["dealershipTypeVisibility"]
-                    item.attachment.append(file)
+                    item.download.append(file)
 
             post_files = []
             clean_items.append(clean_piece_of_content(item))
