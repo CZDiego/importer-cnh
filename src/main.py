@@ -43,8 +43,8 @@ def get_related_content_rich_text(related_content):
 
 
 def map_item(item):
-    page_type = item.get("pageType")
-    if page_type is not None or page_type is not "page":
+    type = item.get("contentType")
+    if type is not None or type is not "page":
         downloads = item.get("downloads")
         related_content = item.get("relatedContent")
         html_downloads = []
