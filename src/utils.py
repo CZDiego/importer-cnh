@@ -6,7 +6,7 @@ CONTENT_MAPPING_VARIABLES = variables.CONTENT_MAPPING_VARIABLES
 
 
 def create_websphere_link(uuid, path):
-    if "/" not in path: return "#"
+    if path is None or "/" not in path: return "#"
     last_index_of_slash = path.rindex("/")
     parent_path = path[:last_index_of_slash + 1]
     name = path[last_index_of_slash + 1:]
@@ -25,7 +25,10 @@ def camel_to_kebab_case(string):
 def to_kebab_case(string):
     string = string.strip()
     string = re.sub('\s+', r' ', string)
+    string = re.sub("&", "-and-", string)
     string = re.sub(' ', r'-', string)
+    string = re.sub("[^A-Za-z0-9-]", "", string)
+    string = re.sub('-+', r'-', string)
     return string.lower()
 
 

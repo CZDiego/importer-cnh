@@ -135,7 +135,7 @@ def init_migration(items):
             logging.exception(e)
 
 
-init_migration(json_array[:4])
+init_migration(json_array)
 
 # print(json_data)
 print("-------------------------------------------")
