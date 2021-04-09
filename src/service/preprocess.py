@@ -180,8 +180,17 @@ def clean_piece_of_content(item):
     item["categories"] = [utils.get_mapped_value(x) for x in item["categories"]]
     item["topics"] = [utils.get_mapped_value(x) for x in item["topics"]]
 
-    item["dealershipTypeVisibility"] = item["dealershipTypeVisibility"].split(",")
-    item["dealershipTypeVisibility"].sort()
+    dealership_type_visibility = item["dealershipTypeVisibility"].split(",")
+    mapped_dealership_type_visibility = []
+    for dealership_type in dealership_type_visibility:
+        mapping = utils.get_mapped_value(dealership_type)
+        if mapping is not None:
+            mapped_dealership_type_visibility.append(mapping)
+
+    separator = ","
+    item["dealershipTypeVisibility"] = separator.join(mapped_dealership_type_visibility)
+
+
 
     return item
 
@@ -212,6 +221,7 @@ def clean_pieces_of_content(items):
             # Only add post files with the same dealershipTypeVisibility as the post parent
             for file in post_files:
                 if are_lists_equal(item["dealershipTypeVisibility"].split(","), file["dealershipTypeVisibility"].split(",")):
+                    del file["dealershipTypeVisibility"]
                     item["attachment"].append(file)
 
             post_files = []
