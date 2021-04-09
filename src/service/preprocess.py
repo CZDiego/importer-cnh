@@ -188,7 +188,9 @@ def clean_piece_of_content(item):
     item.path = utils.get_mapped_value(item.path)
 
     item.thumbnail = utils.get_image_path(item.thumbnail)
+    item.thumbnailCaption = item.thumbnail
     item.image = utils.get_image_path(item.image)
+    item.imageCaption = item.image
 
     item.categories = None if len(item.categories) == 0 \
         else ",".join([utils.get_mapped_value(x) for x in item.categories])
