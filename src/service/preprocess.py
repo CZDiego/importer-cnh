@@ -193,10 +193,13 @@ def clean_piece_of_content(item):
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
     item.path = utils.get_mapped_value(item.path)
 
-    item.thumbnail = utils.get_image_path(item.thumbnail)
-    item.thumbnailCaption = item.thumbnail
-    item.image = utils.get_image_path(item.image)
-    item.imageCaption = item.image
+    thumbnail = item.thumbnail
+    item.thumbnail = utils.get_image_path(thumbnail)
+    item.thumbnailCaption = utils.get_file_name_from_url(thumbnail)
+
+    image = item.image
+    item.image = utils.get_image_path(image)
+    item.imageCaption = utils.get_file_name_from_url(image)
 
     item.categories = None if len(item.categories) == 0 \
         else ",".join([utils.get_mapped_value(x) for x in item.categories])
