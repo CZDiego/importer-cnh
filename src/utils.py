@@ -23,6 +23,7 @@ def camel_to_kebab_case(string):
 
 
 def to_kebab_case(string):
+    string = string.strip()
     string = re.sub('\s+', r' ', string)
     string = re.sub(' ', r'-', string)
     return string.lower()
