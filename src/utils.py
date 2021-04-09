@@ -43,3 +43,7 @@ def get_download_path(url):
 
 def get_image_path(url):
     return "/appl/lfs/" + get_download_path(url)
+
+
+def remove_nones_from_dict(dictionary):
+    return {k: v for k, v in dictionary.items() if v is not None}

@@ -18,6 +18,7 @@ json_array = []
 
 for i in range(0, len(pieces_of_content)):
     json_array.append(pieces_of_content[i].__dict__)
+    # json_array.append(utils.remove_nones_from_dict(pieces_of_content[i].__dict__))
 
 json_data = json.dumps(json_array, indent=2)
 print(json_data)
