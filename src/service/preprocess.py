@@ -60,7 +60,8 @@ for i in range(1, 6):
                     thumbnail="Post " + str(i) + " Thumbnail",
                     image="Post " + str(i) + " Banner",
                     siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
-                    pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
+                    pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")",
+                    pageTitle="Page title")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
 
@@ -95,7 +96,8 @@ for i in range(1, 6):
                    creationDate="created",
                    path="Landing Page on GDP",
                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
-                   pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
+                   pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")",
+                   pageTitle="Page title")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
 

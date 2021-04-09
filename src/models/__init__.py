@@ -56,6 +56,7 @@ class CommonAuthoringTemplate(PieceOfContent):
         self.sidebarComponent2 = kwargs.get("sidebarComponent2", None)
         self.sidebarComponent3 = kwargs.get("sidebarComponent3", None)
         self.pageType = kwargs.get("pageType", None)
+        self.pageTitle = kwargs.get("pageTitle", None)
         self.contentType = kwargs.get("contentType", None)
         self.topics = kwargs.get("topics", None)
         self.targetingRole = kwargs.get("targetingRole", None)
