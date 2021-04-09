@@ -17,10 +17,15 @@ def create_websphere_link(uuid, path):
     return AssetsWebSphereBaseURL + parent_path + name + query_params
 
 
-def to_kebab_case(string):
-    string = re.sub('\s', r'', string)
+def camel_to_kebab_case(string):
     string = re.sub('(.)([A-Z][a-z]+)', r'\1-\2', string)
     return re.sub('([a-z0-9])([A-Z])', r'\1-\2', string).lower()
+
+
+def to_kebab_case(string):
+    string = re.sub('\s+', r' ', string)
+    string = re.sub(' ', r'-', string)
+    return string.lower()
 
 
 def get_result(response):
