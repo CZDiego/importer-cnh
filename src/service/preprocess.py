@@ -59,7 +59,8 @@ for i in range(1, 6):
                     path="Landing Page on GDP",
                     thumbnail="Post " + str(i) + " Thumbnail",
                     image="Post " + str(i) + " Banner",
-                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
+                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
+                    pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
 
@@ -93,7 +94,8 @@ for i in range(1, 6):
                    contentLibraryName="langue",
                    creationDate="created",
                    path="Landing Page on GDP",
-                   siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
+                   siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
+                   pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
 
@@ -113,7 +115,8 @@ page = Resource(masterId="master_id",
                 thumbnail="Thumbnail (for catalog page)",
                 description="Page Short Description",
                 wysiwyg="Wysiwyg",
-                siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
+                siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
+                pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
 PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
