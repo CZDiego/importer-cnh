@@ -140,6 +140,11 @@ def are_lists_equal(list1, list2):
     return list1 == list2
 
 
+def parse_multi_value_field(field):
+    values = [] if field is None else field.split(",")
+    return None if len(values) == 0 else ",".join([utils.get_mapped_value(value) for value in values])
+
+
 def parse_pieces_of_content(excel_path):
     pieces_of_content_result = []
     excel_data = pandas.read_excel(excel_path)
@@ -182,13 +187,8 @@ def clean_piece_of_content(item):
 
     item.name = utils.to_kebab_case(item.name)
 
-    brands = [] if item.brandContractVisibility is None else item.brandContractVisibility.split(",")
-    geographies = [] if item.geographyVisibility is None else item.geographyVisibility.split(",")
-
-    item.brandContractVisibility = None if len(brands) == 0 \
-        else ",".join([utils.get_mapped_value(brand) for brand in brands])
-    item.geographyVisibility = None if len(geographies) == 0 \
-        else ",".join([utils.get_mapped_value(geography) for geography in geographies])
+    item.brandContractVisibility = parse_multi_value_field(item.brandContractVisibility)
+    item.geographyVisibility = parse_multi_value_field(item.geographyVisibility)
 
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
     item.path = utils.get_mapped_value(item.path)
