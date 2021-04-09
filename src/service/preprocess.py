@@ -118,7 +118,7 @@ PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
 def if_timestamp_convert_to_millis(value):
-    return int(time.mktime(value.timetuple())) if isinstance(value, pandas.Timestamp) else value
+    return str(int(time.mktime(value.timetuple()))) if isinstance(value, pandas.Timestamp) else value
 
 
 def is_json_serializable(value):
