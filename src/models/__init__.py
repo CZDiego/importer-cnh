@@ -104,7 +104,9 @@ class HTMLElement(object):
 
 
 class CampaignHTMLBodyTemplate(object):
-    def __init__(self, description, wysiwyg, collapsible_elements):
+    def __init__(self, description, wysiwyg, collapsible_elements=None):
+        if collapsible_elements is None:
+            collapsible_elements = []
         self.description = description
         self.wysiwyg = wysiwyg
         self.collapsible_elements = collapsible_elements
