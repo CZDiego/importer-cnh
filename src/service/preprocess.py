@@ -37,7 +37,7 @@ for i in range(1, 6):
                              title="Post " + str(i) + " File " + str(j) + " title",
                              geographyVisibility="id_pays",
                              brandContractVisibility="theme",
-                             targetingRole="Post " + str(i) + " File " + str(j) + " Targets",
+                             dealershipTypeVisibility="Post " + str(i) + " File " + str(j) + " Targets",
                              contentLibraryName="langue",
                              linkURL="Post " + str(i) + " File " + str(j) + " LINK",
                              overrideLink="Post " + str(i) + " File " + str(j) + " URL",
@@ -52,7 +52,7 @@ for i in range(1, 6):
                     description="Post " + str(i) + " Description",
                     geographyVisibility="id_pays",
                     brandContractVisibility="theme",
-                    targetingRole="Post " + str(i) + " Targets",
+                    dealershipTypeVisibility="Post " + str(i) + " Targets",
                     contentLibraryName="langue",
                     creationDate="Post " + str(i) + " created",
                     path="Post " + str(i) + " Banner",
@@ -75,6 +75,7 @@ for i in range(1, 6):
                             title="Communication kit section " + str(i) + " - file " + str(j) + " title",
                             geographyVisibility="id_pays",
                             brandContractVisibility="theme",
+                            dealershipTypeVisibility="targets",
                             contentLibraryName="langue",
                             linkURL="Communication kit section " + str(i) + " - file " + str(j) + " LINK",
                             path="Communication kit section " + str(i) + " - file " + str(j) + " title")
@@ -87,6 +88,7 @@ for i in range(1, 6):
                    title="Communication kit files section " + str(i),
                    geographyVisibility="id_pays",
                    brandContractVisibility="theme",
+                   dealershipTypeVisibility="targets",
                    contentLibraryName="langue",
                    creationDate="created",
                    path="Communication kit files section " + str(i),
@@ -102,6 +104,7 @@ page = Resource(masterId="master_id",
                 title="Page title",
                 geographyVisibility="id_pays",
                 brandContractVisibility="theme",
+                dealershipTypeVisibility="targets",
                 contentLibraryName="langue",
                 path="Page title",
                 creationDate="created",
@@ -119,6 +122,12 @@ def is_json_serializable(value):
         return True
     except TypeError:
         return False
+
+
+def are_lists_equal(list1, list2):
+    list1.sort()
+    list2.sort()
+    return list1 == list2
 
 
 def parse_pieces_of_content(excel_path):
@@ -165,8 +174,14 @@ def clean_piece_of_content(item):
     item["name"] = utils.to_kebab_case(item["name"])
     item["contentLibraryName"] = utils.get_mapped_value(item["contentLibraryName"])
 
+    item["thumbnail"] = utils.get_file_name_from_url(item["thumbnail"])
+    item["image"] = utils.get_file_name_from_url(item["image"])
+
     item["categories"] = [utils.get_mapped_value(x) for x in item["categories"]]
     item["topics"] = [utils.get_mapped_value(x) for x in item["topics"]]
+
+    item["dealershipTypeVisibility"] = item["dealershipTypeVisibility"].split(",")
+    item["dealershipTypeVisibility"].sort()
 
     return item
 
@@ -188,11 +203,17 @@ def clean_pieces_of_content(items):
             clean_items.append(clean_piece_of_content(item))
         elif content_type == "post_file":
             attachment = dict(title=item["title"], link=item["linkURL"], url=item["overrideLink"],
-                              fileName=utils.get_file_name_from_url(item["linkURL"]))
+                              fileName=utils.get_file_name_from_url(item["linkURL"]),
+                              dealershipTypeVisibility=item["dealershipTypeVisibility"])
             post_files.append(attachment)
         elif content_type == "post":
-            # Todo, only add post files with the same target as post
-            item["attachment"] = post_files
+            item["attachment"] = []
+
+            # Only add post files with the same dealershipTypeVisibility as the post parent
+            for file in post_files:
+                if are_lists_equal(item["dealershipTypeVisibility"].split(","), file["dealershipTypeVisibility"].split(",")):
+                    item["attachment"].append(file)
+
             post_files = []
             clean_items.append(clean_piece_of_content(item))
         else:
