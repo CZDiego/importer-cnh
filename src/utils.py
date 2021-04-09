@@ -5,8 +5,8 @@ AssetsWebSphereBaseURL = variables.WEBSPHERE_VARIABLES.get("AssetsWebSphereBaseU
 CONTENT_MAPPING_VARIABLES = variables.CONTENT_MAPPING_VARIABLES
 
 
-def create_websphere_link(uuid, path=""):
-    if "/" not in path: return "#"
+def create_websphere_link(uuid, path):
+    if path is None or "/" not in path: return "#"
     last_index_of_slash = path.rindex("/")
     parent_path = path[:last_index_of_slash + 1]
     name = path[last_index_of_slash + 1:]
@@ -27,8 +27,8 @@ def to_kebab_case(string):
     string = re.sub('\s+', r' ', string)
     string = re.sub("&", "-and-", string)
     string = re.sub(' ', r'-', string)
-    string = re.sub('-+', r'-', string)
     string = re.sub("[^A-Za-z0-9-]", "", string)
+    string = re.sub('-+', r'-', string)
     return string.lower()
 
 
