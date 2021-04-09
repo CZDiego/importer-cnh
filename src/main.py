@@ -17,13 +17,52 @@ pieces_of_content = preprocessing.get_pieces_of_content(EXCEL_PATH)
 json_array = []
 
 for i in range(0, len(pieces_of_content)):
-    json_array.append(pieces_of_content[i].__dict__)
-    # json_array.append(utils.remove_nones_from_dict(pieces_of_content[i].__dict__))
+    # json_array.append(pieces_of_content[i].__dict__)
+    json_array.append(utils.remove_nones_from_dict(pieces_of_content[i].__dict__))
 
+
+def get_downloads_rich_text(downloads):
+    html_downloads = []
+    for download in downloads:
+        text = download.get("title")
+        link = WEBSPHERE_VARIABLES.get("StorageAPIBaseURL") + download.get("fileName")
+        attrs = dict(href=link, target="_blank")
+        html_downloads.append(HTMLElement("a", text=text, attrs=attrs))
+    return html_downloads
+
+
+def get_related_content_rich_text(related_content):
+    html_related_content = []
+    for content in related_content:
+        text = content.get("title")
+        # TODO add real link
+        link = "#"
+        attrs = dict(href=link)
+        html_related_content.append(HTMLElement("a", text=text, attrs=attrs))
+    return html_related_content
+
+
+def map_item(item):
+    page_type = item.get("pageType")
+    if page_type is not None or page_type is not "page":
+        downloads = item.get("downloads")
+        related_content = item.get("relatedContent")
+        html_downloads = []
+        html_related_content = []
+        if downloads is not None:
+            html_downloads = get_downloads_rich_text(downloads)
+        if related_content is not None:
+            html_related_content = get_related_content_rich_text([dict(title=item.get("pageTitle"))])
+        item["downloads"] = html_markup_generator.create_rich_text(html_downloads)
+        item["relatedContent"] = html_markup_generator.create_rich_text(html_related_content)
+    return item
+
+
+json_array = list(map(map_item, json_array))
 json_data = json.dumps(json_array, indent=2)
 print(json_data)
 print("-------------------------------------------")
-
+"""
 TemplateNames = html_markup_generator.TemplateNames
 
 authoringTemplateName = "Resource"
@@ -93,3 +132,4 @@ banner2 = HTMLElement("a", "Facebook Banner 2", dict(href="#"))
 
 downloads = html_markup_generator.create_rich_text([div, bannerTitle, hr, banner1, banner2])
 print(downloads)
+"""
