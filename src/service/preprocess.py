@@ -41,7 +41,7 @@ for i in range(1, 6):
                              contentLibraryName="langue",
                              linkURL="Post " + str(i) + " File " + str(j) + " LINK",
                              overrideLink="Post " + str(i) + " File " + str(j) + " URL",
-                             path="Post " + str(i) + " Banner")
+                             path="Landing Page on GDP")
 
         PIECES_OF_CONTENT_MAPPING.append(DataMapping(post_file, RESOURCE, "post_file"))
 
@@ -55,7 +55,7 @@ for i in range(1, 6):
                     dealershipTypeVisibility="Post " + str(i) + " Targets",
                     contentLibraryName="langue",
                     creationDate="Post " + str(i) + " created",
-                    path="Post " + str(i) + " Banner",
+                    path="Landing Page on GDP",
                     thumbnail="Post " + str(i) + " Thumbnail",
                     image="Post " + str(i) + " Banner",
                     siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
@@ -78,7 +78,7 @@ for i in range(1, 6):
                             dealershipTypeVisibility="targets",
                             contentLibraryName="langue",
                             linkURL="Communication kit section " + str(i) + " - file " + str(j) + " LINK",
-                            path="Communication kit section " + str(i) + " - file " + str(j) + " title")
+                            path="Landing Page on GDP")
 
         PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit_file, RESOURCE, "kit_file"))
 
@@ -91,7 +91,7 @@ for i in range(1, 6):
                    dealershipTypeVisibility="targets",
                    contentLibraryName="langue",
                    creationDate="created",
-                   path="Communication kit files section " + str(i),
+                   path="Landing Page on GDP",
                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
@@ -106,7 +106,7 @@ page = Resource(masterId="master_id",
                 brandContractVisibility="theme",
                 dealershipTypeVisibility="targets",
                 contentLibraryName="langue",
-                path="Page title",
+                path="Landing Page on GDP",
                 creationDate="created",
                 image="Introvisuel - main banner on page",
                 thumbnail="Thumbnail (for catalog page)",
@@ -170,10 +170,12 @@ def parse_pieces_of_content(excel_path):
 
 def clean_piece_of_content(item):
 
+    item.name = utils.to_kebab_case(item.name)
+
     item.brandContractVisibility = utils.get_mapped_value(item.brandContractVisibility)
     item.geographyVisibility = utils.get_mapped_value(item.geographyVisibility)
-    item.name = utils.to_kebab_case(item.name)
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
+    item.path = utils.get_mapped_value(item.path)
 
     item.thumbnail = utils.get_file_name_from_url(item.thumbnail)
     item.image = utils.get_file_name_from_url(item.image)
