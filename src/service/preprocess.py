@@ -140,13 +140,14 @@ def parse_pieces_of_content(excel_path):
             if pandas.isnull(row[piece_of_content_mapping.properties.masterId]):
                 continue
 
-            ans = dict()
-            for column_name, column_mapping in piece_of_content_mapping.properties.__dict__.items():
-                ans[column_name] = None if column_mapping is None or pandas.isnull(row[column_mapping]) \
-                    else row[column_mapping]
+            piece = Resource(authoringTemplateName=None, contentLibraryName=None, path=None, name=None, title=None)
 
-                if not is_json_serializable(ans[column_name]):
-                    ans[column_name] = str(ans[column_name])
+            for column_name, column_mapping in piece_of_content_mapping.properties.__dict__.items():
+                setattr(piece, column_name, None if column_mapping is None or pandas.isnull(row[column_mapping]) \
+                        else row[column_mapping])
+
+                if not is_json_serializable(getattr(piece, column_name)):
+                    setattr(piece, column_name, str(getattr(piece, column_name)))
 
             categories = []
             for hub in HUBS:
@@ -158,29 +159,29 @@ def parse_pieces_of_content(excel_path):
                 if not pandas.isnull(row[topic]):
                     topics.append(topic.lower())
 
-            ans["categories"] = categories
-            ans["topics"] = topics
-            ans[AUTH_TEMPLATE] = piece_of_content_mapping.auth_template
-            ans[CONTENT_TYPE] = piece_of_content_mapping.content_type
-            pieces_of_content_result.append(ans)
+            piece.categories = categories
+            piece.topics = topics
+            piece.authoringTemplateName = piece_of_content_mapping.auth_template
+            piece.contentType = piece_of_content_mapping.content_type
+            pieces_of_content_result.append(piece)
 
     return pieces_of_content_result
 
 
 def clean_piece_of_content(item):
 
-    item["brandContractVisibility"] = utils.get_mapped_value(item["brandContractVisibility"])
-    item["geographyVisibility"] = utils.get_mapped_value(item["geographyVisibility"])
-    item["name"] = utils.to_kebab_case(item["name"])
-    item["contentLibraryName"] = utils.get_mapped_value(item["contentLibraryName"])
+    item.brandContractVisibility = utils.get_mapped_value(item.brandContractVisibility)
+    item.geographyVisibility = utils.get_mapped_value(item.geographyVisibility)
+    item.name = utils.to_kebab_case(item.name)
+    item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
 
-    item["thumbnail"] = utils.get_file_name_from_url(item["thumbnail"])
-    item["image"] = utils.get_file_name_from_url(item["image"])
+    item.thumbnail = utils.get_file_name_from_url(item.thumbnail)
+    item.image = utils.get_file_name_from_url(item.image)
 
-    item["categories"] = [utils.get_mapped_value(x) for x in item["categories"]]
-    item["topics"] = [utils.get_mapped_value(x) for x in item["topics"]]
+    item.categories = [utils.get_mapped_value(x) for x in item.categories]
+    item.topics = [utils.get_mapped_value(x) for x in item.topics]
 
-    dealership_type_visibility = item["dealershipTypeVisibility"].split(",")
+    dealership_type_visibility = item.dealershipTypeVisibility.split(",")
     mapped_dealership_type_visibility = []
     for dealership_type in dealership_type_visibility:
         mapping = utils.get_mapped_value(dealership_type)
@@ -188,9 +189,7 @@ def clean_piece_of_content(item):
             mapped_dealership_type_visibility.append(mapping)
 
     separator = ","
-    item["dealershipTypeVisibility"] = separator.join(mapped_dealership_type_visibility)
-
-
+    item.dealershipTypeVisibility = separator.join(mapped_dealership_type_visibility)
 
     return item
 
@@ -201,28 +200,28 @@ def clean_pieces_of_content(items):
     clean_items = []
 
     for item in items:
-        content_type = item["contentType"]
+        content_type = item.contentType
         if content_type == "kit_file":
-            attachment = dict(title=item["title"], link=item["linkURL"],
-                              fileName=utils.get_file_name_from_url(item["linkURL"]))
+            attachment = dict(title=item.title, link=item.linkURL,
+                              fileName=utils.get_file_name_from_url(item.linkURL))
             kit_files.append(attachment)
         elif content_type == "kit":
-            item["attachment"] = kit_files
+            item.attachment = kit_files
             kit_files = []
             clean_items.append(clean_piece_of_content(item))
         elif content_type == "post_file":
-            attachment = dict(title=item["title"], link=item["linkURL"], url=item["overrideLink"],
-                              fileName=utils.get_file_name_from_url(item["linkURL"]),
-                              dealershipTypeVisibility=item["dealershipTypeVisibility"])
+            attachment = dict(title=item.title, link=item.linkURL, url=item.overrideLink,
+                              fileName=utils.get_file_name_from_url(item.linkURL),
+                              dealershipTypeVisibility=item.dealershipTypeVisibility)
             post_files.append(attachment)
         elif content_type == "post":
-            item["attachment"] = []
+            item.attachment = []
 
             # Only add post files with the same dealershipTypeVisibility as the post parent
             for file in post_files:
-                if are_lists_equal(item["dealershipTypeVisibility"].split(","), file["dealershipTypeVisibility"].split(",")):
+                if are_lists_equal(item.dealershipTypeVisibility.split(","), file["dealershipTypeVisibility"].split(",")):
                     del file["dealershipTypeVisibility"]
-                    item["attachment"].append(file)
+                    item.attachment.append(file)
 
             post_files = []
             clean_items.append(clean_piece_of_content(item))

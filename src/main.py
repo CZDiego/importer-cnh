@@ -14,11 +14,17 @@ EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 # Main
 pieces_of_content = preprocessing.get_pieces_of_content(EXCEL_PATH)
 
-json_data = json.dumps(pieces_of_content, indent=2)
+# for i in range(0, len(pieces_of_content)):
+#     poc = pieces_of_content[i]
+#     print(poc.name)
+#     print(poc.title)
+#     print(poc.categories)
+#     print(poc.topics)
+# json_data = json.dumps(pieces_of_content, indent=2)
 
-print(json_data)
-print("-------------------------------------------")
-
+# print(pieces_of_content)
+# print("-------------------------------------------")
+"""
 TemplateNames = html_markup_generator.TemplateNames
 
 authoringTemplateName = "Resource"
@@ -88,3 +94,4 @@ banner2 = HTMLElement("a", "Facebook Banner 2", dict(href="#"))
 
 downloads = html_markup_generator.create_rich_text([div, bannerTitle, hr, banner1, banner2])
 print(downloads)
+"""
