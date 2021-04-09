@@ -182,8 +182,14 @@ def clean_piece_of_content(item):
 
     item.name = utils.to_kebab_case(item.name)
 
-    item.brandContractVisibility = utils.get_mapped_value(item.brandContractVisibility)
-    item.geographyVisibility = utils.get_mapped_value(item.geographyVisibility)
+    brands = [] if item.brandContractVisibility is None else item.brandContractVisibility.split(",")
+    geographies = [] if item.geographyVisibility is None else item.geographyVisibility.split(",")
+
+    item.brandContractVisibility = None if len(brands) == 0 \
+        else ",".join([utils.get_mapped_value(brand) for brand in brands])
+    item.geographyVisibility = None if len(geographies) == 0 \
+        else ",".join([utils.get_mapped_value(geography) for geography in geographies])
+
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
     item.path = utils.get_mapped_value(item.path)
 
