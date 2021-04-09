@@ -3,7 +3,8 @@ import json
 from variables import *
 import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
-from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate, TransformHeaders
+from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate, TransformHeaders, \
+    DealershipTypes
 import utils
 import service.preprocess as preprocessing
 
@@ -63,7 +64,8 @@ try:
     campaign = Resource(name="campaign-1", title="Campaign 1", authoringTemplateName=authoringTemplateName,
                         contentLibraryName=contentLibraryName, path=path, body=str(page),
                         transformHeadersH3=TransformHeaders.COLLAPSIBLE_SECTIONS.value, downloads=downloads,
-                        relatedContent=related_content)
+                        relatedContent=related_content, dealershipTypeVisibility=",".join(
+            [DealershipTypes.DEALER.value, DealershipTypes.SUB_DEALER.value]))
     print("-------------------------------------------")
     print(page)
     result = importer_service.save_item(campaign.to_dict())
