@@ -87,21 +87,36 @@ json_array = list(map(map_item, json_array))
 json_data = json.dumps(json_array, indent=2)
 
 
+def save_items(items):
+    response = importer_service.save_items(list(items.values()))
+    report = utils.get_report(response)
+    result = []
+    for response_item in report:
+        item = items.get(response_item.get("name"))
+        result.append(dict(response=response_item, item=item))
+    return result
+
+
 def init_migration(items):
-    posts = []
-    kits = []
+    posts = {}
+    kits = {}
     pages = []
     for item in items:
         try:
             content_type = item.get("contentType")
             if content_type is "post" or content_type is "kit":
-                logger.info("Saving " + content_type)
                 del item["contentType"]
-                response = importer_service.save_item(item)
-                logger.info(json.dumps(response, indent=2))
-                saved_item = dict(response=response, item=item)
-                posts.append(saved_item) if content_type is "post" else kits.append(saved_item)
+                if content_type == "post":
+                    posts[item.get("name")] = item
+                elif content_type == "kit":
+                    kits[item.get("name")] = item
             elif content_type is "page":
+                logger.info("Saving posts ...")
+                posts = save_items(posts)
+                logger.info(json.dumps(posts, indent=2))
+                logger.info("Saving kits ...")
+                kits = save_items(kits)
+                logger.info(json.dumps(kits, indent=2))
                 page_type = item.get("pageType", "campaign").lower()
                 html_posts = []
                 for post in posts:
@@ -147,15 +162,15 @@ def init_migration(items):
                 saved_page["posts"] = posts
                 saved_page["kits"] = kits
                 pages.append(saved_page)
-                kits = []
-                posts = []
+                kits = {}
+                posts = {}
 
         except Exception as e:
             logging.exception(e)
 
 
-logger.info(json.dumps(json_array, indent=2))
-# init_migration(json_array)
+# logger.info(json.dumps(json_array, indent=2))
+init_migration(json_array)
 
 # logger.info(json_data)
 logger.info("-------------------------------------------")
