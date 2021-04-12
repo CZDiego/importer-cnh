@@ -227,7 +227,7 @@ def clean_pieces_of_content(items):
         content_type = item.contentType
         if content_type == "kit_file":
             download = dict(title=item.title, link=item.linkURL,
-                            fileName=utils.get_download_path(item.linkURL))
+                            fileName=utils.get_file_name_from_url(item.linkURL))
             kit_files.append(download)
         elif content_type == "kit":
             item.downloads = kit_files
@@ -235,7 +235,7 @@ def clean_pieces_of_content(items):
             clean_items.append(clean_piece_of_content(item))
         elif content_type == "post_file":
             download = dict(title=item.title, link=item.linkURL, url=item.overrideLink,
-                            fileName=utils.get_download_path(item.linkURL),
+                            fileName=utils.get_file_name_from_url(item.linkURL),
                             dealershipTypeVisibility=item.dealershipTypeVisibility)
             post_files.append(download)
         elif content_type == "post":
