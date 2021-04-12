@@ -10,6 +10,11 @@ import service.preprocess as preprocessing
 
 TemplateNames = html_markup_generator.TemplateNames
 
+logging.basicConfig()
+logging.root.setLevel(logging.NOTSET)
+logging.basicConfig(level=logging.NOTSET)
+logger = logging.getLogger(__name__)
+
 # TODO: Read excel file from local volume instead of having it in docker container
 EXCEL_PATH = r'/export-content-20210302121846.xlsx'
 
@@ -90,10 +95,10 @@ def init_migration(items):
         try:
             content_type = item.get("contentType")
             if content_type is "post" or content_type is "kit":
-                print("Saving " + content_type)
+                logger.info("Saving " + content_type)
                 del item["contentType"]
                 response = importer_service.save_item(item)
-                print(json.dumps(response, indent=2))
+                logger.info(json.dumps(response, indent=2))
                 saved_item = dict(response=response, item=item)
                 posts.append(saved_item) if content_type is "post" else kits.append(saved_item)
             elif content_type is "page":
@@ -109,22 +114,22 @@ def init_migration(items):
                     attrs = dict(href=link)
                     html_posts.append(HTMLElement("a", text=text, attrs=attrs))
                 item["relatedContent"] = html_markup_generator.create_rich_text(html_posts)
-                print(page_type)
+                logger.info(page_type)
                 if page_type == "product" or page_type == "generic":
-                    print("Inside product or generic")
+                    logger.info("Inside product or generic")
                     html_kits = ""
-                    print(kits)
+                    logger.info(kits)
                     for kit in kits:
                         kit_item = kit.get("item")
                         downloads = kit_item.get("downloads")
                         html_kits += downloads
-                    print(html_kits)
+                    logger.info(html_kits)
                     item["downloads"] = html_kits
                     body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""))
-                    print("body")
+                    logger.info("body")
                     item["body"] = html_markup_generator.generate(body, template_name=TemplateNames.CAMPAIGN.value)
                 elif page_type == "campaign":
-                    print("Inside campaign")
+                    logger.info("Inside campaign")
                     html_kits = []
                     for kit in kits:
                         kit_item = kit.get("item")
@@ -134,11 +139,11 @@ def init_migration(items):
                         html_kits.append(CollapsibleElement(title, body_elements=body_elements))
                     body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""), html_kits)
                     item["body"] = html_markup_generator.generate(body, template_name=TemplateNames.CAMPAIGN.value)
-                print("Saving page")
+                logger.info("Saving page")
                 del item["contentType"]
                 item["transformHeadersH3"] = TransformHeaders.COLLAPSIBLE_SECTIONS.value
                 saved_page = importer_service.save_item(item)
-                print(json.dumps(saved_page, indent=2))
+                logger.info(json.dumps(saved_page, indent=2))
                 saved_page["posts"] = posts
                 saved_page["kits"] = kits
                 pages.append(saved_page)
@@ -149,11 +154,11 @@ def init_migration(items):
             logging.exception(e)
 
 
-print(json.dumps(json_array, indent=2))
-init_migration(json_array)
+logger.info(json.dumps(json_array, indent=2))
+# init_migration(json_array)
 
-# print(json_data)
-print("-------------------------------------------")
+# logger.info(json_data)
+logger.info("-------------------------------------------")
 """
 TemplateNames = html_markup_generator.TemplateNames
 
@@ -193,8 +198,8 @@ try:
                             CollapsibleElement("LGF Space", [kit_file1, kit_file2])]
     downloads = html_markup_generator.create_rich_text([kit_file1, kit_file2])
     related_content = html_markup_generator.create_rich_text([related_post_1, related_post_2])
-    print("related_content")
-    print(related_content)
+    logger.info("related_content")
+    logger.info(related_content)
     campaign_body = CampaignHTMLBodyTemplate("Awesome Description", "<pre>This the WYSIWYG</pre>", collapsible_elements)
     page = html_markup_generator.generate(campaign_body, template_name=TemplateNames.CAMPAIGN.value)
     campaign = Resource(name="campaign-1", title="Campaign 1", authoringTemplateName=authoringTemplateName,
@@ -202,18 +207,18 @@ try:
                         transformHeadersH3=TransformHeaders.COLLAPSIBLE_SECTIONS.value, downloads=downloads,
                         relatedContent=related_content, dealershipTypeVisibility=",".join(
             [DealershipTypes.DEALER.value, DealershipTypes.SUB_DEALER.value]))
-    print("-------------------------------------------")
-    print(page)
+    logger.info("-------------------------------------------")
+    logger.info(page)
     result = importer_service.save_item(campaign.to_dict())
-    print(result)
+    logger.info(result)
 except (ConnectionError, Exception) as e:
     logging.exception(e)
 
-print(utils.get_mapped_value("cih"))
-print(utils.get_mapped_value("ADVANCED FARMING SYSTEMS"))
-print(utils.get_mapped_value("UK"))
+logger.info(utils.get_mapped_value("cih"))
+logger.info(utils.get_mapped_value("ADVANCED FARMING SYSTEMS"))
+logger.info(utils.get_mapped_value("UK"))
 
-# print(json_data)
+# logger.info(json_data)
 
 
 div = HTMLElement("div")
@@ -223,5 +228,5 @@ banner1 = HTMLElement("a", "Facebook Banner 1", dict(href="#"))
 banner2 = HTMLElement("a", "Facebook Banner 2", dict(href="#"))
 
 downloads = html_markup_generator.create_rich_text([div, bannerTitle, hr, banner1, banner2])
-print(downloads)
+logger.info(downloads)
 """
