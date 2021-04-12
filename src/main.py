@@ -60,6 +60,9 @@ def map_item(item):
             html_related_content = get_related_content_rich_text([dict(title=item.get("pageTitle"))])
         item["downloads"] = html_markup_generator.create_rich_text(html_downloads)
         item["relatedContent"] = html_markup_generator.create_rich_text(html_related_content)
+    item["originalName"] = item["name"]
+    master_id = "-" + str(item["masterId"]) if item["masterId"] is not None else ""
+    item["name"] = item["name"] + str(master_id)
     return item
 
 
