@@ -32,6 +32,10 @@ def to_kebab_case(string):
     return string.lower()
 
 
+def get_report(response):
+    return response.get("report", {})
+
+
 def get_result(response):
     report = response.get("report", {})
     return report[0] if len(report) > 0 else {}

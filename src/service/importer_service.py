@@ -25,6 +25,21 @@ def save_item(piece_of_content, user=USER, password=PASSWORD):
     return result
 
 
+def update_items(data, user=USER, password=PASSWORD):
+    return post_items(data, user=user, password=password)
+
+
+def save_items(data, user=USER, password=PASSWORD):
+    response = post_items(data)
+    report = utils.get_report()
+    for item in report:
+        errors = item.get("errors")
+        if len(errors) > 0:
+            response = update_items(data, user, password)
+            break
+    return response
+
+
 def update_item(piece_of_content, user=USER, password=PASSWORD):
     data = [piece_of_content]
     response = post_items(data, user=user, password=password)
