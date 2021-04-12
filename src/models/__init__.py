@@ -41,6 +41,7 @@ class CommonAuthoringTemplate(PieceOfContent):
         self.shortTitle = kwargs.get("shortTitle", None)
         self.summary = kwargs.get("summary", None)
         self.masterId = kwargs.get("masterId", None)
+        self.pageMasterId = kwargs.get("pageMasterId", None)
         self.thumbnail = kwargs.get("thumbnail", None)
         self.thumbnailCaption = kwargs.get("thumbnailCaption", None)
         self.alternateByline = kwargs.get("alternateByline", None)

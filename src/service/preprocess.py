@@ -33,6 +33,7 @@ for i in range(1, 6):
     for j in range(1, 6):
 
         post_file = Resource(masterId="Post " + str(i) + " File " + str(j) + " title",
+                             pageMasterId="master_id",
                              authoringTemplateName="id_pays",
                              name="Post " + str(i) + " File " + str(j) + " title",
                              title="Post " + str(i) + " File " + str(j) + " title",
@@ -47,6 +48,7 @@ for i in range(1, 6):
         PIECES_OF_CONTENT_MAPPING.append(DataMapping(post_file, RESOURCE, "post_file"))
 
     post = Resource(masterId="Post " + str(i) + " master id",
+                    pageMasterId="master_id",
                     authoringTemplateName="id_pays",
                     name="Post " + str(i) + " Title",
                     title="Post " + str(i) + " Title",
@@ -73,6 +75,7 @@ for i in range(1, 6):
     for j in range(1, 21):
 
         kit_file = Resource(masterId="Communication kit section " + str(i) + " - file " + str(j) + " title",
+                            pageMasterId="master_id",
                             authoringTemplateName="id_pays",
                             name="Communication kit section " + str(i) + " - file " + str(j) + " title",
                             title="Communication kit section " + str(i) + " - file " + str(j) + " title",
@@ -86,6 +89,7 @@ for i in range(1, 6):
         PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit_file, RESOURCE, "kit_file"))
 
     kit = Resource(masterId="Communication kit files section " + str(i),
+                   pageMasterId="master_id",
                    authoringTemplateName="id_pays",
                    name="Communication kit files section " + str(i),
                    title="Communication kit files section " + str(i),
@@ -104,6 +108,7 @@ for i in range(1, 6):
 
 # Add page
 page = Resource(masterId="master_id",
+                pageMasterId="master_id",
                 authoringTemplateName="id_pays",
                 name="Page title",
                 title="Page title",
@@ -185,6 +190,7 @@ def parse_pieces_of_content(excel_path):
 
 def clean_piece_of_content(item):
 
+    item.pageMasterId = int(item.pageMasterId)
     item.name = utils.to_kebab_case(item.name)
 
     item.brandContractVisibility = parse_multi_value_field(item.brandContractVisibility)
