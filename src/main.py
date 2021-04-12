@@ -46,6 +46,15 @@ def get_related_content_rich_text(related_content):
     return html_related_content
 
 
+def get_formatted_id(item, key):
+    uuid = item.get(key, "")
+    try:
+        uuid = int(uuid)
+    except Exception:
+        uuid = ""
+    return str(uuid)
+
+
 def map_item(item):
     content_type = item.get("contentType")
     if content_type is not None or content_type is not "page":
@@ -61,8 +70,11 @@ def map_item(item):
         item["downloads"] = html_markup_generator.create_rich_text(html_downloads)
         item["relatedContent"] = html_markup_generator.create_rich_text(html_related_content)
     item["originalName"] = item["name"]
-    master_id = "-" + str(item["masterId"]) if item["masterId"] is not None else ""
-    item["name"] = item["name"] + str(master_id)
+    master_id = get_formatted_id(item, "masterId")
+    master_id = "-" + master_id if master_id != "" else ""
+    page_master_id = get_formatted_id(item, "pageMasterId")
+    page_master_id = "-" + page_master_id if page_master_id != "" else ""
+    item["name"] = item["name"] + master_id + page_master_id
     return item
 
 
@@ -71,7 +83,6 @@ json_data = json.dumps(json_array, indent=2)
 
 
 def init_migration(items):
-    print(json.dumps(items, indent=2))
     posts = []
     kits = []
     pages = []
@@ -138,6 +149,7 @@ def init_migration(items):
             logging.exception(e)
 
 
+print(json.dumps(json_array, indent=2))
 init_migration(json_array)
 
 # print(json_data)
