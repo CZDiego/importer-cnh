@@ -121,6 +121,7 @@ page = Resource(masterId="master_id",
                 image="Introvisuel - main banner on page",
                 thumbnail="Thumbnail (for catalog page)",
                 description="Page Short Description",
+                summary="Page Short Description",
                 wysiwyg="Wysiwyg",
                 siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
                 pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")")
