@@ -140,8 +140,8 @@ def init_migration(items):
                         html_kits += downloads
                     logger.info(html_kits)
                     item["downloads"] = html_kits
-                    body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""))
                     logger.info("body")
+                    body = CampaignHTMLBodyTemplate(item.get("description", ""), item.get("wysiwyg", ""))
                     item["body"] = html_markup_generator.generate(body, template_name=TemplateNames.CAMPAIGN.value)
                 elif page_type == "campaign":
                     logger.info("Inside campaign")
@@ -166,11 +166,14 @@ def init_migration(items):
                 posts = {}
 
         except Exception as e:
-            logging.exception(e)
+            logger.error(e)
+    logger.info("Pages:")
+    logger.info(json.dumps(pages, indent=2))
+    logger.info("--------END-------")
 
 
 # logger.info(json.dumps(json_array, indent=2))
-init_migration(json_array)
+# init_migration(json_array)
 
 # logger.info(json_data)
 logger.info("-------------------------------------------")
