@@ -170,17 +170,17 @@ def parse_pieces_of_content(excel_path):
                 # if not is_json_serializable(getattr(piece, column_name)):
                 #    setattr(piece, column_name, str(getattr(piece, column_name)))
 
-            categories = []
+            related_hubs = []
             for hub in HUBS:
                 if not pandas.isnull(row[hub]):
-                    categories.append(hub.lower())
+                    related_hubs.append(hub.lower())
 
             topics = []
             for topic in TOPICS:
                 if not pandas.isnull(row[topic]):
                     topics.append(topic.lower())
 
-            piece.categories = categories
+            piece.relatedHubs = related_hubs
             piece.topics = topics
             piece.authoringTemplateName = piece_of_content_mapping.auth_template
             piece.contentType = piece_of_content_mapping.content_type
@@ -198,7 +198,11 @@ def clean_piece_of_content(item):
     item.geographyVisibility = parse_multi_value_field(item.geographyVisibility)
 
     item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
+    item.path = "news" if item.contentType == "post" else item.path  # ALL POSTS ARE NEWS :(
     item.path = utils.get_mapped_value(item.path)
+
+    if item.siteLocation is not None:
+        item.siteLocation = utils.get_mapped_value(item.siteLocation)
 
     thumbnail = item.thumbnail
     item.thumbnail = utils.get_image_path(thumbnail)
@@ -208,8 +212,8 @@ def clean_piece_of_content(item):
     item.image = utils.get_image_path(image)
     item.imageCaption = utils.get_file_name_from_url(image)
 
-    item.categories = None if len(item.categories) == 0 \
-        else ",".join([utils.get_mapped_value(x) for x in item.categories])
+    item.relatedHubs = None if len(item.relatedHubs) == 0 \
+        else ",".join([utils.get_mapped_value(x) for x in item.relatedHubs])
     item.topics = None if len(item.topics) == 0 \
         else ",".join([utils.get_mapped_value(x) for x in item.topics])
 
