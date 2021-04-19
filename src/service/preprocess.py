@@ -1,7 +1,7 @@
 import pandas
 import json
 import time
-from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, EXCEL_MAPPING_VARIABLES
+from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, NEWS, EXCEL_MAPPING_VARIABLES
 import utils
 from models import Resource
 
@@ -45,7 +45,7 @@ for i in range(1, 6):
                              overrideLink="Post " + str(i) + " File " + str(j) + " URL",
                              path="Landing Page on GDP")
 
-        PIECES_OF_CONTENT_MAPPING.append(DataMapping(post_file, RESOURCE, "post_file"))
+        PIECES_OF_CONTENT_MAPPING.append(DataMapping(post_file, NEWS, "post_file"))
 
     post = Resource(masterId="Post " + str(i) + " master id",
                     pageMasterId="master_id",
@@ -65,7 +65,7 @@ for i in range(1, 6):
                     pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")",
                     pageTitle="Page title")
 
-    PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, RESOURCE, "post"))
+    PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, NEWS, "post"))
 
 
 # Add kits

@@ -11,3 +11,4 @@ EXCEL_MAPPING_VARIABLES = config["EXCEL_MAPPING_VARIABLES"]
 AUTH_TEMPLATE = "authoringTemplateName"
 CONTENT_TYPE = "contentType"
 RESOURCE = "Resource"
+NEWS = "News"
