@@ -13,6 +13,8 @@ docker build -t cnh-importer .
 
 To run the docker container run the following command:
 
+Make sure to add the volume binding to access to the logs files.
+See .run/Dockerfile.run.xml to see an example.
 ```
-docker run cnh-importer
+docker run cnh-importer -v $HOME/CNHi:/data
 ```

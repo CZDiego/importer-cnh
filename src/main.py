@@ -3,14 +3,23 @@ import json
 from variables import *
 import html_markup_utils.html_markup_generator as html_markup_generator
 import service.importer_service as importer_service
-from models import CollapsibleElement, Resource, HTMLElement, CampaignHTMLBodyTemplate, TransformHeaders, \
-    DealershipTypes
+from models import CollapsibleElement, HTMLElement, CampaignHTMLBodyTemplate, TransformHeaders
 import utils
 import service.preprocess as preprocessing
+from datetime import datetime
+import os
 
 TemplateNames = html_markup_generator.TemplateNames
 
-logging.basicConfig()
+now = datetime.now()
+current_time = now.strftime("%-d_%b_%Y")
+
+base_dir = "/data/" + current_time + "/"
+if not os.path.exists(base_dir):
+    os.mkdir(base_dir)
+
+logging.basicConfig(filename=base_dir + "app.log", format='%(asctime)s %(levelname)-4s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 logging.root.setLevel(logging.NOTSET)
 logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger(__name__)
@@ -26,6 +35,12 @@ json_array = []
 for i in range(0, len(pieces_of_content)):
     # json_array.append(pieces_of_content[i].__dict__)
     json_array.append(utils.remove_nones_from_dict(pieces_of_content[i].__dict__))
+
+
+def write_file(f_path, cont):
+    f = open(f_path, "a")
+    f.write(cont)
+    f.close()
 
 
 def get_downloads_rich_text(downloads):
@@ -101,6 +116,8 @@ def init_migration(items):
     posts = {}
     kits = {}
     pages = []
+    logger.info("--------STARTING IMPORTATION-------")
+    logger.info(current_time)
     for item in items:
         try:
             content_type = item.get("contentType")
@@ -167,16 +184,21 @@ def init_migration(items):
 
         except Exception as e:
             logger.error(e)
-    logger.info("Pages:")
-    logger.info(json.dumps(pages, indent=2))
-    logger.info("--------END-------")
+    report_file_path = base_dir + "generated_report_" + timestamp + ".json"
+    logger.info("Creating json file in " + file_path)
+    write_file(report_file_path, json.dumps(pages, indent=2))
+    logger.info("--------ENDING IMPORTATION-------")
 
 
-# logger.info(json.dumps(json_array, indent=2))
+logger.info("Importer tool CNH")
+content = json.dumps(json_array, indent=2)
+timestamp = str(now.timestamp())
+file_path = base_dir + "generated_json_" + timestamp + ".json"
+logger.info("Creating json file in " + file_path)
+write_file(file_path, content)
 # init_migration(json_array)
 
 # logger.info(json_data)
-logger.info("-------------------------------------------")
 """
 TemplateNames = html_markup_generator.TemplateNames
 
