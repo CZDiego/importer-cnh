@@ -114,13 +114,14 @@ def save_items(items):
 def init_migration(items):
     posts = {}
     kits = {}
-    pages = []
+    report = []
     logger.info("--------STARTING IMPORTATION-------")
     logger.info(current_time)
     for item in items:
         try:
             content_type = item.get("contentType")
             if content_type is "post" or content_type is "kit":
+                logger.info(item.get("authoringTemplateName"))
                 del item["contentType"]
                 if content_type == "post":
                     posts[item.get("name")] = item
@@ -138,6 +139,8 @@ def init_migration(items):
                 for post in posts:
                     post_item = post.get("item")
                     post_response = post.get("response")
+                    post_response["type"] = "post"
+                    report.append(post_response)
                     text = post_item.get("title")
                     uuid = post_response.get("newId")
                     path = post_response.get("path")
@@ -151,6 +154,9 @@ def init_migration(items):
                     html_kits = ""
                     logger.info(kits)
                     for kit in kits:
+                        kit_response = kit.get("response")
+                        kit_response["type"] = "kit"
+                        report.append(kit_response)
                         kit_item = kit.get("item")
                         downloads = kit_item.get("downloads")
                         html_kits += downloads
@@ -163,6 +169,9 @@ def init_migration(items):
                     logger.info("Inside campaign")
                     html_kits = []
                     for kit in kits:
+                        kit_response = kit.get("response")
+                        kit_response["type"] = "kit"
+                        report.append(kit_response)
                         kit_item = kit.get("item")
                         title = kit_item.get("title")
                         original_downloads = kit_item.get("originalDownloads")
@@ -175,9 +184,8 @@ def init_migration(items):
                 item["transformHeadersH3"] = TransformHeaders.COLLAPSIBLE_SECTIONS.value
                 saved_page = importer_service.save_item(item)
                 logger.info(json.dumps(saved_page, indent=2))
-                saved_page["posts"] = posts
-                saved_page["kits"] = kits
-                pages.append(saved_page)
+                saved_page["type"] = "page"
+                report.append(saved_page)
                 kits = {}
                 posts = {}
 
@@ -185,7 +193,7 @@ def init_migration(items):
             logger.error(e)
     report_file_path = base_dir + "generated_report_" + timestamp + ".json"
     logger.info("Creating json file in " + file_path)
-    write_file(report_file_path, json.dumps(pages, indent=2))
+    write_file(report_file_path, json.dumps(report, indent=2))
     logger.info("--------ENDING IMPORTATION-------")
 
 
