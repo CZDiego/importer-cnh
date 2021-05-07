@@ -4,7 +4,9 @@ import time
 from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, NEWS, EXCEL_MAPPING_VARIABLES
 import utils
 from models import Resource
+import datetime
 
+START_DATE = datetime.datetime.strptime('30121899', '%d%m%Y').date()
 
 PIECES_OF_CONTENT_MAPPING = []
 HUBS = []
@@ -31,7 +33,6 @@ for i in range(1, 6):
 
     # Add post files for each post
     for j in range(1, 6):
-
         post_file = Resource(masterId="Post " + str(i) + " File " + str(j) + " title",
                              pageMasterId="master_id",
                              authoringTemplateName="id_pays",
@@ -58,6 +59,7 @@ for i in range(1, 6):
                     dealershipTypeVisibility="Post " + str(i) + " Targets",
                     contentLibraryName="langue",
                     creationDate="Post " + str(i) + " created",
+                    publishDate="date_publication_deb",
                     path="Landing Page on GDP",
                     thumbnail="Post " + str(i) + " Thumbnail",
                     image="Post " + str(i) + " Banner",
@@ -67,13 +69,11 @@ for i in range(1, 6):
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(post, NEWS, "post"))
 
-
 # Add kits
 for i in range(1, 6):
 
     # Add kit file for each kit
     for j in range(1, 21):
-
         kit_file = Resource(masterId="Communication kit section " + str(i) + " - file " + str(j) + " title",
                             pageMasterId="master_id",
                             authoringTemplateName="id_pays",
@@ -98,13 +98,13 @@ for i in range(1, 6):
                    dealershipTypeVisibility="targets",
                    contentLibraryName="langue",
                    creationDate="created",
+                   publishDate="date_publication_deb",
                    path="Landing Page on GDP",
                    siteLocation="Special pages (\"Last Minute\" or \"Promotions\")",
                    pageType="Page type (\"Campaign\" or \"Product\" or \"Generic\")",
                    pageTitle="Page title")
 
     PIECES_OF_CONTENT_MAPPING.append(DataMapping(kit, RESOURCE, "kit"))
-
 
 # Add page
 page = Resource(masterId="master_id",
@@ -118,6 +118,7 @@ page = Resource(masterId="master_id",
                 contentLibraryName="langue",
                 path="Landing Page on GDP",
                 creationDate="created",
+                publishDate="date_publication_deb",
                 image="Introvisuel - main banner on page",
                 thumbnail="Thumbnail (for catalog page)",
                 description="Page Short Description",
@@ -128,8 +129,20 @@ page = Resource(masterId="master_id",
 PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
-def if_timestamp_convert_to_millis(value):
-    return str(int(time.mktime(value.timetuple()))) if isinstance(value, pandas.Timestamp) else value
+def date_to_unix_timestamp(date_value):
+    return str(int(datetime.datetime.timestamp(date_value)))
+
+
+def if_date_convert_to_unix_timestamp(name, value):
+
+    if isinstance(value, pandas.Timestamp):
+        return date_to_unix_timestamp(value.to_pydatetime())
+
+    if name.endswith("Date") and isinstance(value, int):
+        new_date = START_DATE + datetime.timedelta(days=value)
+        return date_to_unix_timestamp(datetime.datetime(new_date.year, new_date.month, new_date.day))
+
+    return value
 
 
 def is_json_serializable(value):
@@ -165,7 +178,7 @@ def parse_pieces_of_content(excel_path):
 
             for column_name, column_mapping in piece_of_content_mapping.properties.__dict__.items():
                 setattr(piece, column_name, None if column_mapping is None or pandas.isnull(row[column_mapping]) \
-                        else if_timestamp_convert_to_millis(row[column_mapping]))
+                        else if_date_convert_to_unix_timestamp(column_name, row[column_mapping]))
 
                 # if not is_json_serializable(getattr(piece, column_name)):
                 #    setattr(piece, column_name, str(getattr(piece, column_name)))
@@ -190,7 +203,6 @@ def parse_pieces_of_content(excel_path):
 
 
 def clean_piece_of_content(item):
-
     item.pageMasterId = int(item.pageMasterId)
     item.name = utils.to_kebab_case(item.name)
 
@@ -254,7 +266,8 @@ def clean_pieces_of_content(items):
 
             # Only add post files with the same dealershipTypeVisibility as the post parent
             for file in post_files:
-                if are_lists_equal(item.dealershipTypeVisibility.split(","), file["dealershipTypeVisibility"].split(",")):
+                if are_lists_equal(item.dealershipTypeVisibility.split(","),
+                                   file["dealershipTypeVisibility"].split(",")):
                     del file["dealershipTypeVisibility"]
                     item.downloads.append(file)
 
@@ -266,7 +279,6 @@ def clean_pieces_of_content(items):
 
 
 def get_pieces_of_content(excel_path):
-
     pieces_of_content = parse_pieces_of_content(excel_path)
     pieces_of_content = clean_pieces_of_content(pieces_of_content)
 

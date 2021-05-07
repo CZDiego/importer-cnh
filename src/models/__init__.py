@@ -14,6 +14,7 @@ class PieceOfContent(object):
         self.summary = kwargs.get("summary")
         self.wysiwyg = kwargs.get("wysiwyg")
         self.creationDate = kwargs.get("creationDate")
+        self.publishDate = kwargs.get("publishDate")
         self.expiryDate = kwargs.get("expiryDate")
         self.generalDateOne = kwargs.get("generalDateOne")
         self.generalDateTwo = kwargs.get("generalDateTwo")
