@@ -5,7 +5,7 @@ RUN pip install MarkupPy
 RUN pip install pandas
 RUN pip install xlrd==1.2.0
 
-ADD data/export-content-20210302121846.xlsx /
+ADD data/ /
 ADD src/variables.py /
 ADD src/utils.py /
 ADD src/service/ /service

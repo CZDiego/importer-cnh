@@ -5,6 +5,21 @@ from variables import AUTH_TEMPLATE, CONTENT_TYPE, RESOURCE, NEWS, EXCEL_MAPPING
 import utils
 from models import Resource
 import datetime
+import logging
+import os
+
+now = datetime.datetime.now()
+current_time = now.strftime("%-d_%b_%Y")
+
+base_dir = "/data/" + current_time + "/"
+if not os.path.exists(base_dir):
+    os.mkdir(base_dir)
+
+logging.basicConfig(filename=base_dir + __name__ + ".log", format='%(asctime)s %(levelname)-4s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
+logging.root.setLevel(logging.NOTSET)
+logging.basicConfig(level=logging.NOTSET)
+logger = logging.getLogger(__name__)
 
 START_DATE = datetime.datetime.strptime('30121899', '%d%m%Y').date()
 
@@ -13,13 +28,16 @@ HUBS = []
 TOPICS = []
 
 # Add category list
-for i in range(1, 11):
+for i in range(1, 16):
     HUBS.append(EXCEL_MAPPING_VARIABLES.get("hub" + str(i)))
 
+logger.info(HUBS)
+
 # Add topic list
-for i in range(1, 10):
+for i in range(1, 20):
     TOPICS.append(EXCEL_MAPPING_VARIABLES.get("topic" + str(i)))
 
+logger.info(TOPICS)
 
 class DataMapping:
     def __init__(self, properties, auth_template, content_type):
@@ -130,7 +148,7 @@ PIECES_OF_CONTENT_MAPPING.append(DataMapping(page, RESOURCE, "page"))
 
 
 def date_to_unix_timestamp(date_value):
-    return str(int(datetime.datetime.timestamp(date_value)))
+    return date_value.strftime("%a, %d %b %Y %H:%M:%S.000Z")
 
 
 def if_date_convert_to_unix_timestamp(name, value):
@@ -161,6 +179,7 @@ def are_lists_equal(list1, list2):
 
 def parse_multi_value_field(field):
     values = [] if field is None else field.split(",")
+    logger.info([utils.get_mapped_value(value) for value in values])
     return None if len(values) == 0 else ",".join([utils.get_mapped_value(value) for value in values])
 
 
@@ -247,6 +266,8 @@ def clean_pieces_of_content(items):
     clean_items = []
 
     for item in items:
+        if item.name is None:
+            continue
         content_type = item.contentType
         if content_type == "kit_file":
             download = dict(title=item.title, link=item.linkURL,

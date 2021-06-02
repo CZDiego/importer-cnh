@@ -25,7 +25,8 @@ logging.basicConfig(level=logging.NOTSET)
 logger = logging.getLogger(__name__)
 
 # TODO: Read excel file from local volume instead of having it in docker container
-EXCEL_PATH = r'/export-content-20210302121846.xlsx'
+# EXCEL_PATH = r'/export-content-20210302121846.xlsx'
+EXCEL_PATH = r'/BC export map - UK nhag-CE - IE Ag-CE - 2021 04 13 v1.xlsx'
 
 # Main
 pieces_of_content = preprocessing.get_pieces_of_content(EXCEL_PATH)
@@ -111,6 +112,15 @@ def save_items(items):
     return result
 
 
+def get_save_like_items(items):
+    items = list(items.values())
+    result = []
+    for item in items:
+        response = dict(name=item["name"], path=item["path"], warning="Kits aren't being created as pieces of content")
+        result.append(dict(response=response, item=item))
+    return result
+
+
 def init_migration(items):
     posts = {}
     kits = {}
@@ -119,6 +129,7 @@ def init_migration(items):
     logger.info(current_time)
     for item in items:
         try:
+            logger.info(item.get("name"))
             content_type = item.get("contentType")
             if content_type is "post" or content_type is "kit":
                 logger.info(item.get("authoringTemplateName"))
@@ -129,10 +140,13 @@ def init_migration(items):
                     kits[item.get("name")] = item
             elif content_type is "page":
                 logger.info("Saving posts ...")
+                logger.info(json.dumps(posts, indent=2))
                 posts = save_items(posts)
                 logger.info(json.dumps(posts, indent=2))
+                # todo don't save kits
                 logger.info("Saving kits ...")
-                kits = save_items(kits)
+                logger.info(json.dumps(kits, indent=2))
+                kits = get_save_like_items(kits)
                 logger.info(json.dumps(kits, indent=2))
                 page_type = item.get("pageType", "campaign").lower()
                 html_posts = []
@@ -190,7 +204,7 @@ def init_migration(items):
                 posts = {}
 
         except Exception as e:
-            logger.error(e)
+            logger.info(e)
     report_file_path = base_dir + "generated_report_" + timestamp + ".json"
     logger.info("Creating json file in " + file_path)
     write_file(report_file_path, json.dumps(report, indent=2))
