@@ -2,6 +2,7 @@ import re
 import variables
 
 AssetsWebSphereBaseURL = variables.WEBSPHERE_VARIABLES.get("AssetsWebSphereBaseURL")
+LIBRARY_MAPPING_VARIABLES = variables.LIBRARY_MAPPING_VARIABLES
 CONTENT_MAPPING_VARIABLES = variables.CONTENT_MAPPING_VARIABLES
 
 
@@ -45,6 +46,9 @@ def get_mapped_value(key):
     key = key.lower()
     return CONTENT_MAPPING_VARIABLES.get(key)
 
+def get_library_value(key):
+    key = key.lower()
+    return LIBRARY_MAPPING_VARIABLES.get(key)
 
 def get_file_name_from_url(url):
     return None if url is None else url.rsplit('/', 1)[-1]

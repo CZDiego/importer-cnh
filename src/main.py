@@ -26,9 +26,11 @@ logger = logging.getLogger(__name__)
 
 # TODO: Read excel file from local volume instead of having it in docker container
 # EXCEL_PATH = r'/export-content-20210302121846.xlsx'
-EXCEL_PATH = r'/BC export map - UK nhag-CE - IE Ag-CE - 2021 04 13 v1.xlsx'
+#EXCEL_PATH = r'/BC export map - UK nhag-CE - IE Ag-CE - 2021 04 13 v1.xlsx'
+EXCEL_PATH = r'/BC export map - ES Ag-CE - 2021 06 11 v1.xlsx'
 
 # Main
+print('Getting pieces of content from: '+EXCEL_PATH)
 pieces_of_content = preprocessing.get_pieces_of_content(EXCEL_PATH)
 
 json_array = []

@@ -29,13 +29,16 @@ TOPICS = []
 
 # Add category list
 for i in range(1, 16):
-    HUBS.append(EXCEL_MAPPING_VARIABLES.get("hub" + str(i)))
+    HUBS.append(EXCEL_MAPPING_VARIABLES.get("eshub" + str(i)))
 
 logger.info(HUBS)
 
 # Add topic list
-for i in range(1, 20):
-    TOPICS.append(EXCEL_MAPPING_VARIABLES.get("topic" + str(i)))
+#UK has 20 topics in spreadsheet 
+#for i in range(1, 20):
+#ES has 8 topics
+for i in range(1, 8):
+    TOPICS.append(EXCEL_MAPPING_VARIABLES.get("estopic" + str(i)))
 
 logger.info(TOPICS)
 
@@ -223,14 +226,20 @@ def parse_pieces_of_content(excel_path):
 
 def clean_piece_of_content(item):
     item.pageMasterId = int(item.pageMasterId)
+    print('Item Page Master id '+str(item.pageMasterId))
     item.name = utils.to_kebab_case(item.name)
+    print('Item Name '+str(item.name))
+    print('Content Type '+str(item.contentType)) 
 
     item.brandContractVisibility = parse_multi_value_field(item.brandContractVisibility)
     item.geographyVisibility = parse_multi_value_field(item.geographyVisibility)
 
-    item.contentLibraryName = utils.get_mapped_value(item.contentLibraryName)
+    item.contentLibraryName = utils.get_library_value(item.contentLibraryName)
+    print('Content Library '+str(item.contentLibraryName))
     item.path = "news" if item.contentType == "post" else item.path  # ALL POSTS ARE NEWS :(
-    item.path = utils.get_mapped_value(item.path)
+    print('Item Path '+str(item.path))
+    if item.path is not None:
+        item.path = utils.get_mapped_value(item.path)
 
     if item.siteLocation is not None:
         item.siteLocation = utils.get_mapped_value(item.siteLocation)
